@@ -54,44 +54,6 @@ public class Dictionary {
 			e.printStackTrace();
 		}
 	}
-	public static void main(String[] args) {
-		Dictionary hello=new Dictionary();
-		hello.translateFile("german.txt","new.txt");
-		//System.out.println(hello.detectLanguage("kennen"));
-		hello.enwriter.close();
-		hello.dewriter.close();
-	}
-	/**
-	 * Opens file, translates and outputs to another file
-	 * @param filename name of file to translate
-	 * @param translationFilename name of file to output translation
-	 */
-	public void translateFile(String filename,String translationFilename) {
-		try {
-			BufferedReader reader=new BufferedReader(new FileReader(filename));
-			PrintWriter writer=new PrintWriter(new FileOutputStream(translationFilename));
-			while (reader.ready()) {
-				String line=reader.readLine();
-				String[] sentences=line.split("[\\.?]");
-				for (int i=0;i<sentences.length;i++) {
-					sentences[i].trim();
-					String[] words=sentences[i].split(" ");
-					String translatedSentence="";
-					for (int j=0;j<words.length;j++) {
-						//may want to detect language instead of using a boolean
-						translatedSentence=translatedSentence.concat(translate(words[j],false))+" ";
-					}
-					writer.print(translatedSentence+". ");
-				}
-				writer.println();
-			}
-			writer.close();
-			reader.close();
-		}
-		catch (Exception e) {
-			
-		}
-	}
 	/**
 	 * translates a single word
 	 * @param word
@@ -228,5 +190,9 @@ public class Dictionary {
 			}
 		}
 		return ret;
+	}
+	public void closeDictionary() {
+		enwriter.close();
+		dewriter.close();
 	}
 }
