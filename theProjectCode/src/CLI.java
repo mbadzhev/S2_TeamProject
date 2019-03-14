@@ -1,6 +1,10 @@
+import java.util.Scanner;
+
 public class CLI
 {
-	private MenuChoice menu;
+	private Translator translator;
+	
+	Scanner s1 = new Scanner(System.in);
 	
 	public static void main(String[] args)
 	{
@@ -14,7 +18,7 @@ public class CLI
 
 	public void initialise()
 	{
-		menu = new MenuChoice();
+		
 	}
 	
 	public void process()
@@ -28,11 +32,15 @@ public class CLI
 		{		
 			case 1:
 				System.out.println("case 1");
+				String userInput = s1.nextLine();
+				String languageFrom = s1.nextLine();
+				String languageTo = s1.nextLine();
 				//Translate method
 				break;
 			case 2:
 				System.out.println("case 2");
-				//Read method
+				String fileInput = s1.nextLine();
+				//Translate file method
 				break;
 			case 3:
 				System.out.println("case 3");
@@ -40,18 +48,22 @@ public class CLI
 				break;
 			case 4:
 				System.out.println("case 4");
+				String exportName = s1.nextLine();
 				//Export dictionary method
 				break;
 			case 5:
 				System.out.println("case 5");
+				String importName = s1.nextLine();
 				//Import dictionary method
 				break;
 			case 6:
 				System.out.println("case 6");
+				String addWord = s1.nextLine();
 				//Add word dictionary method
 				break;
 			case 7:
 				System.out.println("case 7");
+				String removeWord = s1.nextLine();
 				//Remove word dictionary method
 				break;
 			case 8:
