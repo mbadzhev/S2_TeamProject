@@ -18,7 +18,7 @@ public class CLI
 
 	public void initialise()
 	{
-		Translator translator = new Translator();
+		translator = new Translator();
 	}
 	
 	public void process()
@@ -38,10 +38,9 @@ public class CLI
 				//From what language to translate
 				int userChoiceFrom = IO.getInt("Select the language this is in:");
 				boolean choiceValidFrom = false;
+				String languageFrom = "";
 				while(choiceValidFrom != true)
 				{
-					String languageFrom;
-					
 					switch(userChoiceFrom)
 					{
 						case 1:
@@ -61,10 +60,9 @@ public class CLI
 				//To what language to translate
 				int userChoiceTo = IO.getInt("Select the language do you want this translated in:");
 				boolean choiceValidTo = false;
+				String languageTo = "";
 				while(choiceValidTo != true)
 				{
-					String languageTo;
-					
 					switch(userChoiceTo)
 					{
 						case 1:
@@ -80,7 +78,8 @@ public class CLI
 							break;
 					}
 				}
-				//Translate method
+				
+				translator.translate(userInput, languageFrom, languageTo);
 				break;
 			case 2:
 				System.out.println("case 2");
