@@ -18,7 +18,7 @@ public class CLI
 
 	public void initialise()
 	{
-		
+		Translator translator = new Translator();
 	}
 	
 	public void process()
@@ -32,14 +32,60 @@ public class CLI
 		{		
 			case 1:
 				System.out.println("case 1");
-				String userInput = s1.nextLine();
-				String languageFrom = s1.nextLine();
-				String languageTo = s1.nextLine();
+				String userInput = IO.getString("What do you want translated?");
+				displayLanguageMenu();
+				
+				//From what language to translate
+				int userChoiceFrom = IO.getInt("Select the language this is in:");
+				boolean choiceValidFrom = false;
+				while(choiceValidFrom != true)
+				{
+					String languageFrom;
+					
+					switch(userChoiceFrom)
+					{
+						case 1:
+							languageFrom = "en";
+							choiceValidFrom = true;
+							break;
+						case 2:
+							languageFrom = "de";
+							choiceValidFrom = true;
+							break;
+						default:
+							System.out.println("Out of range, please re-enter your choice: ");
+							break;
+					}
+				}
+				
+				//To what language to translate
+				int userChoiceTo = IO.getInt("Select the language do you want this translated in:");
+				boolean choiceValidTo = false;
+				while(choiceValidTo != true)
+				{
+					String languageTo;
+					
+					switch(userChoiceTo)
+					{
+						case 1:
+							languageTo = "en";
+							choiceValidTo = true;
+							break;
+						case 2:
+							languageTo = "de";
+							choiceValidTo = true;
+							break;
+						default:
+							System.out.println("Out of range, please re-enter your choice: ");
+							break;
+					}
+				}
 				//Translate method
 				break;
 			case 2:
 				System.out.println("case 2");
-				String fileInput = s1.nextLine();
+				String fileInput = IO.getString("What is the name of the dictionary you want to load?");
+				//translator.loadDictionaryFromFile(fileInput);
 				//Translate file method
 				break;
 			case 3:
@@ -54,6 +100,7 @@ public class CLI
 			case 5:
 				System.out.println("case 5");
 				String importName = s1.nextLine();
+				
 				//Import dictionary method
 				break;
 			case 6:
@@ -72,7 +119,7 @@ public class CLI
 				System.exit(0);
 				break;
 			default:
-				System.out.println("Invalid choice, please re-enter your choice: ");
+				System.out.println("Out of range, please re-enter your choice: ");
 				break;
 		}
 	}
@@ -91,6 +138,14 @@ public class CLI
 		System.out.println("6. Add Word To Dictionary");
 		System.out.println("7. Remove Word From Dictionary");
 		System.out.println("8. Exit Program");
+		System.out.println("");
+	}
+	
+	public void displayLanguageMenu()
+	{
+		System.out.println("");
+		System.out.println("1. English");
+		System.out.println("2. German");
 		System.out.println("");
 	}
 }
