@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class CLI
 {
 	private MenuChoice menu;
@@ -22,10 +20,9 @@ public class CLI
 	public void process()
 	{
 		displayMenu();
-		
-		Scanner menuScanner = new Scanner(System.in);
-		String choice = menuScanner.nextLine();
-		int menuOption = Integer.parseInt(choice);
+				
+		//Calls method to validate user input
+		int menuOption = IO.getInt("Please select one of the options above:");
 	
 		switch(menuOption)
 		{		
@@ -74,7 +71,6 @@ public class CLI
 	public void displayMenu()
 	{
 		System.out.println("");
-		System.out.println("Please select one of the options below:");
 		System.out.println("1. Translate Input");
 		System.out.println("2. Translate File");
 		System.out.println("3. Display Dictionary");
@@ -83,5 +79,6 @@ public class CLI
 		System.out.println("6. Add Word To Dictionary");
 		System.out.println("7. Remove Word From Dictionary");
 		System.out.println("8. Exit Program");
+		System.out.println("");
 	}
 }
