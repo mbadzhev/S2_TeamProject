@@ -18,7 +18,7 @@ public class CLI
 
 	public void initialise()
 	{
-		Translator translator = new Translator();
+		translator = new Translator();
 	}
 	
 	public void process()
