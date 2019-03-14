@@ -1,4 +1,12 @@
 
-public class MenuChoice {
+public class MenuChoice
+{
 
+	public String callTranslate()
+	{
+		
+		return;
+	}
+	
+	public String
 }
