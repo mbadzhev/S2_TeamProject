@@ -1,6 +1,6 @@
 public class CLI
 {
-	private MenuChoice menu;
+	
 	
 	public static void main(String[] args)
 	{
@@ -14,7 +14,7 @@ public class CLI
 
 	public void initialise()
 	{
-		menu = new MenuChoice();
+		
 	}
 	
 	public void process()
