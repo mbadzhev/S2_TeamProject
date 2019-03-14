@@ -16,7 +16,7 @@ public class Translator {
 	 * @param filename            name of file to translate
 	 * @param translationFilename name of file to output translation
 	 */
-	public void translateFile(String filename, String translationFilename) {
+	public void translateFile(String filename, String translationFilename, String direction) {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			PrintWriter writer = new PrintWriter(new FileOutputStream(translationFilename));
@@ -29,8 +29,8 @@ public class Translator {
 					String translatedSentence = "";
 					for (int j = 0; j < words.length; j++) {
 						// may want to change this
-						boolean toGerman = dictionary.detectLanguage(words[j]).equals("english") ? true : false;
-						translatedSentence = translatedSentence.concat(dictionary.translate(words[j], toGerman)) + " ";
+						
+						translatedSentence = translatedSentence.concat(dictionary.translate(words[j], direction)) + " ";
 					}
 					writer.print(translatedSentence + ". ");
 				}
@@ -71,6 +71,10 @@ public class Translator {
 	 * @return the translated text
 	 */
 	public String translate(String input, String language, String targetLanguage) {
-		return "Kieshaufenumsetzungstechnicker";
+		return dictionary.translate(input, language + "-" + targetLanguage);
+	}
+	
+	public String translate(String input, String direction) {
+		return dictionary.translate(input, direction);
 	}
 }
