@@ -26,6 +26,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class GUI extends Application
@@ -69,34 +70,7 @@ public class GUI extends Application
 			MenuItem item2 = new MenuItem("Item 2");
 			
 			settings.getItems().add(item1);
-			settings.getItems().add(item2);
-
-//Start page
-			Text text = new Text();
-		    text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 50)); 
-		    //setting the position of the text 
-		    text.setX(250); 
-		    text.setY(90); 
-		    text.setFill(Color.GREEN);  
-		    text.setStrokeWidth(2);
-		    text.setStroke(Color.BLUE);
-		    text.setText("Translator:");
-
-		    Group root = new Group(text);
-		    Scene scene = new Scene(root, 800, 400);
-		   
-		    VBox vBox = new VBox(menuBar);
-		   
-
-		    
-//		    translate.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-//				   
-//				@Override
-//				public void handle(MouseEvent event) {
-//					scene.setRoot(group2);
-//				}
-//		    });
-		    
+			settings.getItems().add(item2);	    
 		    
 //Translator page
 		    
@@ -130,7 +104,7 @@ public class GUI extends Application
 //	        grid.setRowSpan(translatedText, 2); 
 //		  
 		    Button button1 = new Button("Submit"); 
-		    Button button2 = new Button("Clear");  
+		    //Button button2 = new Button("Clear");  
 
 		    grid.add(text1, 0, 0);
 		    grid.add(textToTransl, 0, 1);
@@ -138,28 +112,11 @@ public class GUI extends Application
 		    grid.add(textTranslation, 1, 1);
 		    grid.add(translatedText, 1, 2);
 		    grid.add(button1, 0, 3); 
-		    grid.add(button2, 0, 3); 
+		   //grid.add(button2, 0, 3); 
 		
 		    Group transl = new Group(grid);
-		    
-//Add word page
-		    
-		    Text text2 = new Text();
-		    text2.setFont(Font.font("verdana", 30)); 
-		    //setting the position of the text 
-		    text2.setX(250); 
-		    text2.setY(90); 
-		    text2.setFill(Color.GREEN);  
-		    text2.setStrokeWidth(1);
-		    text2.setStroke(Color.BLUE);
-		    text2.setText("Add word:");
-		
-		    Group add = new Group(text2);
-		    
-		    
-		    
-		    
-		    
+		    Scene scene = new Scene(transl, 1200, 600);
+		    VBox vBox = new VBox(menuBar);		    
 		  
 		    menuItem0.setOnAction(e ->
 		    {
@@ -169,30 +126,29 @@ public class GUI extends Application
 		    
 		    menuItem1.setOnAction(e -> 
 		    {
-		    	add.getChildren().add(vBox);
-		    	scene.setRoot(add); 
+		    	add(scene, vBox);
 		    });
 		    
-//		    menuItem2.setOnAction(e -> 
-//		    {
-//		    	scene.setRoot(group2); 
-//		    });
-//		    
-//		    menuItem3.setOnAction(e -> 
-//		    {
-//		    	scene.setRoot(group2); 
-//		    });
-//		    
-//		    menuItem4.setOnAction(e -> 
-//		    {
-//		    	scene.setRoot(group2); 
-//		    });
-//		    
-//		    menuItem5.setOnAction(e -> 
-//		    {
-//		    	scene.setRoot(group2); 
-//		    });
-//		    
+		    menuItem2.setOnAction(e -> 
+		    {
+		    	remove(scene, vBox);
+		    });
+    
+		    menuItem3.setOnAction(e -> 
+		    {
+		    	loadDic(scene, vBox);
+		    });
+		    
+		    menuItem4.setOnAction(e -> 
+		    {
+		    	displayDic(scene, vBox);
+		    });
+		    
+		    menuItem5.setOnAction(e -> 
+		    {
+		    	saveDic(scene, vBox); 
+		    });
+		    
 //		    item1.setOnAction(e -> 
 //		    {
 //		    	scene.setRoot(group2); 
@@ -202,6 +158,8 @@ public class GUI extends Application
 //		    {
 //		    	scene.setRoot(group2); 
 //		    });
+	
+		    
 		    
 //		    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 //		    { 
@@ -214,11 +172,7 @@ public class GUI extends Application
 //		    translate.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		    
 		    
-		    root.getChildren().add(vBox);
-		    
-//		    transl.getChildren().add(menuBar);
-//		    add.getChildren().add(menuBar);
-		    
+		    transl.getChildren().add(vBox);		    
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		}
@@ -231,5 +185,220 @@ public class GUI extends Application
 	public static void main(String[] args) 
 	{
 		launch(args);
-	}	
+	}
+	
+	public void add(Scene scene, VBox vBox)
+	{		
+		 GridPane grid = new GridPane();
+		 ColumnConstraints column1 = new ColumnConstraints();
+		 column1.setPercentWidth(50);
+		 ColumnConstraints column2 = new ColumnConstraints();
+		 column2.setPercentWidth(50);
+		 
+		 grid.getColumnConstraints().addAll(column1, column2);
+		 grid.setAlignment(Pos.CENTER);
+		 grid.setHgap(50);
+		 grid.setVgap(40);
+		 grid.setPadding(new Insets(100, 100, 100, 100));
+		 grid.setMinSize(200, 200); 
+		    
+		 Text title = new Text("Add a new word to the dictionary:");
+		 title.setFont(Font.font("Tahoma", 40)); 
+	
+		 Label textToTransl = new Label("Please enter the english word:");
+		 textToTransl.setFont(Font.font(20));
+		 TextField toTransl = new TextField();
+		    
+		 Label textTranslation = new Label("Please enter the translation:");
+		 textTranslation.setFont(Font.font(20));
+		 TextField translatedText = new TextField();
+		 
+		 Button button = new Button("Submit");  
+		 HBox box = new HBox(10);
+		 box.setAlignment(Pos.BOTTOM_RIGHT);
+		 box.getChildren().add(button);
+
+		 grid.add(title, 0, 0, 2, 1);
+		 grid.add(textToTransl, 0, 1);
+		 grid.add(toTransl, 1, 1);
+		 grid.add(textTranslation, 0, 2);
+		 grid.add(translatedText, 1, 2);
+		 grid.add(box, 1, 4); 
+		 
+		 Group add = new Group(grid);
+		 add.getChildren().add(vBox);
+		 scene.setRoot(add); 
+	}
+	
+	public void remove(Scene scene, VBox vBox)
+	{	
+	    GridPane grid = new GridPane();
+		 ColumnConstraints column1 = new ColumnConstraints();
+		 column1.setPercentWidth(50);
+		 ColumnConstraints column2 = new ColumnConstraints();
+		 column2.setPercentWidth(50);
+		 
+		 grid.getColumnConstraints().addAll(column1, column2);
+		 grid.setAlignment(Pos.CENTER);
+		 grid.setHgap(50);
+		 grid.setVgap(40);
+		 grid.setPadding(new Insets(100, 100, 100, 100));
+		 grid.setMinSize(200, 200); 
+		    
+		 Text title = new Text("Remove word from dictionary:");
+		 title.setFont(Font.font("Tahoma", 40)); 
+	
+		 Label textToTransl = new Label("Please enter the word you want to remove:");
+		 textToTransl.setFont(Font.font(20));
+		 TextField toTransl = new TextField();
+		    
+//		 Label textTranslation = new Label("Please enter the translation:");
+//		 textTranslation.setFont(Font.font(20));
+//		 TextField translatedText = new TextField();
+		 
+		 Button button = new Button("Submit");  
+		 HBox box = new HBox(10);
+		 box.setAlignment(Pos.BOTTOM_RIGHT);
+		 box.getChildren().add(button);
+
+		 grid.add(title, 0, 0, 2, 1);
+		 grid.add(textToTransl, 0, 1);
+		 grid.add(toTransl, 1, 1);
+//		 grid.add(textTranslation, 0, 2);
+//		 grid.add(translatedText, 1, 2);
+		 grid.add(box, 1, 3); 
+	    
+	    Group remove = new Group(grid);
+	    remove.getChildren().add(vBox);
+	    scene.setRoot(remove); 
+	}
+	
+	public void loadDic(Scene scene, VBox vBox)
+	{
+		 GridPane grid = new GridPane();
+		 ColumnConstraints column1 = new ColumnConstraints();
+		 column1.setPercentWidth(50);
+		 ColumnConstraints column2 = new ColumnConstraints();
+		 column2.setPercentWidth(50);
+		 
+		 grid.getColumnConstraints().addAll(column1, column2);
+		 grid.setAlignment(Pos.CENTER);
+		 grid.setHgap(50);
+		 grid.setVgap(40);
+		 grid.setPadding(new Insets(100, 100, 100, 100));
+		 grid.setMinSize(200, 200); 
+		    
+		 Text title = new Text("Load a Dictionary from File:");
+		 title.setFont(Font.font("Tahoma", 40)); 
+	
+		 Label textToTransl = new Label("Please enter the details of the dictionary:");
+		 textToTransl.setFont(Font.font(20));
+		 TextField toTransl = new TextField();
+		    
+//		 Label textTranslation = new Label("Please enter the translation:");
+//		 textTranslation.setFont(Font.font(20));
+//		 TextField translatedText = new TextField();
+		 
+		 Button button = new Button("Submit");  
+		 HBox box = new HBox(10);
+		 box.setAlignment(Pos.BOTTOM_RIGHT);
+		 box.getChildren().add(button);
+
+		 grid.add(title, 0, 0, 2, 1);
+		 grid.add(textToTransl, 0, 1);
+		 grid.add(toTransl, 1, 1);
+//		 grid.add(textTranslation, 0, 2);
+//		 grid.add(translatedText, 1, 2);
+		 grid.add(box, 1, 4); 
+	
+	    Group loadDic = new Group(grid);
+	    loadDic.getChildren().add(vBox);
+	    scene.setRoot(loadDic); 
+	}
+	
+	public void displayDic(Scene scene, VBox vBox)
+	{
+		 GridPane grid = new GridPane();
+		 ColumnConstraints column1 = new ColumnConstraints();
+		 column1.setPercentWidth(50);
+		 ColumnConstraints column2 = new ColumnConstraints();
+		 column2.setPercentWidth(50);
+		 
+		 grid.getColumnConstraints().addAll(column1, column2);
+		 grid.setAlignment(Pos.CENTER);
+		 grid.setHgap(50);
+		 grid.setVgap(40);
+		 grid.setPadding(new Insets(100, 100, 100, 100));
+		 grid.setMinSize(200, 200); 
+		    
+		 Text title = new Text("Display the Dictionary:");
+		 title.setFont(Font.font("Tahoma", 40)); 
+	
+		 Label textToTransl = new Label("Please enter the details of the dictionary:");
+		 textToTransl.setFont(Font.font(20));
+		 TextField toTransl = new TextField();
+		    
+//		 Label textTranslation = new Label("Please enter the translation:");
+//		 textTranslation.setFont(Font.font(20));
+//		 TextField translatedText = new TextField();
+		 
+		 Button button = new Button("Submit");  
+		 HBox box = new HBox(10);
+		 box.setAlignment(Pos.BOTTOM_RIGHT);
+		 box.getChildren().add(button);
+
+		 grid.add(title, 0, 0, 2, 1);
+		 grid.add(textToTransl, 0, 1);
+		 grid.add(toTransl, 1, 1);
+//		 grid.add(textTranslation, 0, 2);
+//		 grid.add(translatedText, 1, 2);
+		 grid.add(box, 1, 4); 
+	
+	    Group displayDic = new Group(grid);
+	    displayDic.getChildren().add(vBox);
+	    scene.setRoot(displayDic); 
+	}
+	
+	public void saveDic(Scene scene, VBox vBox)
+	{
+		 GridPane grid = new GridPane();
+		 ColumnConstraints column1 = new ColumnConstraints();
+		 column1.setPercentWidth(50);
+		 ColumnConstraints column2 = new ColumnConstraints();
+		 column2.setPercentWidth(50);
+		 
+		 grid.getColumnConstraints().addAll(column1, column2);
+		 grid.setAlignment(Pos.CENTER);
+		 grid.setHgap(50);
+		 grid.setVgap(40);
+		 grid.setPadding(new Insets(100, 100, 100, 100));
+		 grid.setMinSize(200, 200); 
+		    
+		 Text title = new Text("Save the Dictionary to file:");
+		 title.setFont(Font.font("Tahoma", 40)); 
+	
+		 Label textToTransl = new Label("Please enter the details of the dictionary:");
+		 textToTransl.setFont(Font.font(20));
+		 TextField toTransl = new TextField();
+		    
+//		 Label textTranslation = new Label("Please enter the translation:");
+//		 textTranslation.setFont(Font.font(20));
+//		 TextField translatedText = new TextField();
+		 
+		 Button button = new Button("Submit");  
+		 HBox box = new HBox(10);
+		 box.setAlignment(Pos.BOTTOM_RIGHT);
+		 box.getChildren().add(button);
+
+		 grid.add(title, 0, 0, 2, 1);
+		 grid.add(textToTransl, 0, 1);
+		 grid.add(toTransl, 1, 1);
+//		 grid.add(textTranslation, 0, 2);
+//		 grid.add(translatedText, 1, 2);
+		 grid.add(box, 1, 4); 
+	
+	    Group saveDic = new Group(grid);
+	    saveDic.getChildren().add(vBox);
+	    scene.setRoot(saveDic); 
+	}
 }
