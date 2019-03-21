@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
@@ -75,10 +76,12 @@ public class GUI extends Application
 //Translator page
 		    
 		    GridPane grid = new GridPane();
+		    
 		    ColumnConstraints column1 = new ColumnConstraints();
 		    column1.setPercentWidth(50);
 		    ColumnConstraints column2 = new ColumnConstraints();
 		    column2.setPercentWidth(50);
+		    
 		    grid.getColumnConstraints().addAll(column1, column2);
 		    grid.setAlignment(Pos.CENTER);
 		    grid.setHgap(50);
@@ -93,26 +96,23 @@ public class GUI extends Application
 		    textToTransl.setFont(Font.font(15));
 
 		    TextArea toTransl = new TextArea();
-		    //toTransl.setPrefHeight(100);
 		    
 		    Label textTranslation = new Label("Translation:");
 		    textTranslation.setFont(Font.font(15));
 
 		    TextArea translatedText = new TextArea();
-		    
-//		    grid.setColumnSpan(translatedText, 3);
-//	        grid.setRowSpan(translatedText, 2); 
 //		  
-		    Button button1 = new Button("Submit"); 
-		    //Button button2 = new Button("Clear");  
+		    Button button1 = new Button("Submit");  
+			HBox box = new HBox(10);
+			box.setAlignment(Pos.BOTTOM_RIGHT);
+			box.getChildren().add(button1);
 
 		    grid.add(text1, 0, 0);
 		    grid.add(textToTransl, 0, 1);
 		    grid.add(toTransl, 0, 2);
 		    grid.add(textTranslation, 1, 1);
 		    grid.add(translatedText, 1, 2);
-		    grid.add(button1, 0, 3); 
-		   //grid.add(button2, 0, 3); 
+		    grid.add(box, 0, 4); 
 		
 		    Group transl = new Group(grid);
 		    Scene scene = new Scene(transl, 1200, 600);
@@ -120,8 +120,11 @@ public class GUI extends Application
 		  
 		    menuItem0.setOnAction(e ->
 		    {
-		    	transl.getChildren().add(vBox);
-		    	scene.setRoot(transl);
+		    	if (!transl.getChildren().contains(vBox)) {
+		    		transl.getChildren().add(vBox);
+			    	scene.setRoot(transl);
+		    	}
+		    	
 		    });
 		    
 		    menuItem1.setOnAction(e -> 
@@ -190,20 +193,21 @@ public class GUI extends Application
 	public void add(Scene scene, VBox vBox)
 	{		
 		 GridPane grid = new GridPane();
+		// grid.setAlignment(Pos.CENTER);
+		 
 		 ColumnConstraints column1 = new ColumnConstraints();
 		 column1.setPercentWidth(50);
 		 ColumnConstraints column2 = new ColumnConstraints();
 		 column2.setPercentWidth(50);
 		 
 		 grid.getColumnConstraints().addAll(column1, column2);
-		 grid.setAlignment(Pos.CENTER);
 		 grid.setHgap(50);
 		 grid.setVgap(40);
 		 grid.setPadding(new Insets(100, 100, 100, 100));
 		 grid.setMinSize(200, 200); 
 		    
 		 Text title = new Text("Add a new word to the dictionary:");
-		 title.setFont(Font.font("Tahoma", 40)); 
+		 title.setFont(Font.font("Tahoma", 40));
 	
 		 Label textToTransl = new Label("Please enter the english word:");
 		 textToTransl.setFont(Font.font(20));
@@ -223,11 +227,28 @@ public class GUI extends Application
 		 grid.add(toTransl, 1, 1);
 		 grid.add(textTranslation, 0, 2);
 		 grid.add(translatedText, 1, 2);
-		 grid.add(box, 1, 4); 
+		 grid.add(box, 1, 4);
+		 
+		 //added message
+		 Text message = new Text();
+		 grid.add(message, 1, 6);
 		 
 		 Group add = new Group(grid);
 		 add.getChildren().add(vBox);
 		 scene.setRoot(add); 
+		 
+		 EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
+		 { 
+		   @Override 
+		   public void handle(MouseEvent e) 
+		   { 
+		    	message.setFill(Color.FIREBRICK);
+		    	message.setFont(Font.font(20));
+		    	message.setText("Word added to dictionary");
+		   } 
+		 };   
+		 button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		 
 	}
 	
 	public void remove(Scene scene, VBox vBox)
