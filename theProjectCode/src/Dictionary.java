@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -43,7 +44,22 @@ public class Dictionary {
 		}
 	}
 
-	public void loadDictionary(String filename, HashMap<String, String> map) throws IOException {
+	/**
+	 * Given a filename, this function parses a dictionary from that file to a given HashMap.
+	 *
+	 * @param filename the file where the dictionary is store in.
+	 * @param map the HashMap to store the dictionary to.
+	 * @throws IOException 
+	 */
+	public void loadDictionary(String filename, String direction) throws IOException {
+		HashMap<String, String> map;
+		if (partsMap.containsKey(direction)) {
+			map = partsMap.get(direction);
+		} else {
+			// add new HashMap
+			map = new HashMap<String, String>();
+			partsMap.put(direction, map);
+		}
 		BufferedReader reader = new BufferedReader(new FileReader(filename));
 		String line;
 		while (reader.ready()) {
@@ -52,6 +68,8 @@ public class Dictionary {
 			map.put(mappings[0], mappings[1]);
 		}
 		reader.close();
+		//TODO check if the format of the dictionary is right
+		//TODO support UTF-8 / Umlaut
 	}
 	
 	/**

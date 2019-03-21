@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Translator {
@@ -47,9 +48,12 @@ public class Translator {
 	 * loads a dictionary from a file
 	 * 
 	 * @param fileName the file name of the dictionary
+	 * @param direction the direction of the dictionary in the file
+	 * @throws IOException 
 	 */
-	public void loadDictionaryFromFile(String fileName) {
-
+	public void loadDictionaryFromFile(String fileName, String direction) throws IOException {
+		dictionary.loadDictionary(fileName, direction);
+		// TODO method to check if direction is valid.
 	}
 
 	/**
