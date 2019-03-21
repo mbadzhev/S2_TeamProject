@@ -20,9 +20,9 @@ public class Dictionary {
 	private String dedbFilename = "germandatabase.txt";
 	private final static String HOST = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
 	private final static String KEY = "trnsl.1.1.20190305T204312Z.dfa16cd3173c9caf.d933df65b77daf7957e97b8e2e6571320a9823a3";
-	private final static String PATH_DICTIONARIES = "/dictionaries/";
 	private PrintWriter enwriter;
 	private PrintWriter dewriter;
+	// TODO remove enwriter and dewriter and make the skaleable
 	private PrintWriter theWriter;
 	private HashMap<String, HashMap<String, String>> partsMap;
 
@@ -45,11 +45,12 @@ public class Dictionary {
 	}
 
 	/**
-	 * Given a filename, this function parses a dictionary from that file to a given HashMap.
+	 * Given a filename, this function parses a dictionary from that file to a given
+	 * HashMap.
 	 *
 	 * @param filename the file where the dictionary is store in.
-	 * @param map the HashMap to store the dictionary to.
-	 * @throws IOException 
+	 * @param map      the HashMap to store the dictionary to.
+	 * @throws IOException
 	 */
 	public void loadDictionary(String filename, String direction) throws IOException {
 		HashMap<String, String> map;
@@ -68,20 +69,21 @@ public class Dictionary {
 			map.put(mappings[0], mappings[1]);
 		}
 		reader.close();
-		//TODO check if the format of the dictionary is right
-		//TODO support UTF-8 / Umlaut
+		// TODO check if the format of the dictionary is right
+		// TODO support UTF-8 / Umlaut
 	}
-	
-/**
- * this function saves a dictionary to a file. The filename of the file will be the in the form [direction].txt.
- * E.g. saving the direction "de-en" produces a file called "de-en.txt".
- * 
- */
-	public void saveDictionary() { 
-		
+
+	/**
+	 * this function saves a dictionary to a file. The filename of the file will be
+	 * the in the form [direction].txt. E.g. saving the direction "de-en" produces a
+	 * file called "de-en.txt".
+	 * 
+	 */
+	public void saveDictionary() {
+
 		// TODO complete the code for this function. Use an iterator.
 	}
-	
+
 	/**
 	 * translates a single word
 	 * 
@@ -95,7 +97,7 @@ public class Dictionary {
 			return "-1";
 		}
 		HashMap<String, String> currentDictionary = partsMap.get(direction);
-		
+
 		if (word.equals("")) {
 			return word;
 		}
@@ -119,8 +121,7 @@ public class Dictionary {
 	}
 
 	/**
-	 * Saves words not already in the dictionary.
-	 * The words will be added to the 
+	 * Saves words not already in the dictionary. The words will be added to the
 	 * 
 	 * @param word
 	 * @param translation
@@ -129,14 +130,15 @@ public class Dictionary {
 	private void saveWord(String word, String translation, String direction) {
 		try {
 			theWriter = new PrintWriter(new FileOutputStream(direction + ".txt", true));
+			// TODO remvoe theWriter and create a HashMap of writers for every direction
 		} catch (FileNotFoundException e) {
 			System.out.println("fail");
 		}
-		
+
 		HashMap<String, String> currentDictionary = partsMap.get(direction);
-		
+
 		currentDictionary.put(word, translation);
-		if(theWriter != null) {
+		if (theWriter != null) {
 			theWriter.append(word + " " + translation + "\n");
 			theWriter.flush();
 		}
@@ -147,26 +149,29 @@ public class Dictionary {
 		try {
 			theWriter = new PrintWriter(new FileOutputStream(getInverseDirection(direction) + ".txt", true));
 		} catch (FileNotFoundException e) {
-			
-		} 
+
+		}
 		currentDictionary = partsMap.get(getInverseDirection(direction));
 		currentDictionary.put(word, translation);
-		if(theWriter != null) {
+		if (theWriter != null) {
 			theWriter.append(word + " " + translation + "\n");
 			theWriter.flush();
 		}
 	}
 
 	/**
-	 * determines the inverse direction of a direction. A direction could be "en-de" or "fr-de".
-	 * If the direction is "en-de", the inverse will be "de-en". Doesn't check for direction validity
+	 * determines the inverse direction of a direction. A direction could be "en-de"
+	 * or "fr-de". If the direction is "en-de", the inverse will be "de-en". Doesn't
+	 * check for direction validity
+	 * 
 	 * @param direction
 	 * @return
 	 */
 	private String getInverseDirection(String direction) {
 		String[] languages = direction.split("-");
 		return languages[1] + "-" + languages[0];
-	} //TODO check for validity of direction
+	} // TODO check for validity of direction
+
 	/**
 	 * Parses json translation given by API
 	 * 
@@ -221,9 +226,9 @@ public class Dictionary {
 	 * @param word
 	 * @return english or german or not found or both
 	 */
-//	public String detectLanguage(String word) {
+	public String detectLanguage(String word) {
 //		int count = 0;
-//		String ret = "not found";
+		String ret = "not found";
 //		if (englishToGermanDictionary.containsKey(word)) {
 //			ret = "english";
 //			count++;
@@ -250,11 +255,22 @@ public class Dictionary {
 //			} catch (Exception e) {
 //			}
 //		}
-//		return ret;
-//	}
+		return ret;
+	}
 
 	public void closeDictionary() {
 		enwriter.close();
 		dewriter.close();
+	}
+
+	/**
+	 * returns a whole dictionary as a String
+	 * 
+	 * @param direction the dictionary to display
+	 * @return a dictionary as a String
+	 */
+	public String displayDictionary(String direction) {
+		// TODO work on this function
+		return "I'm a dictionary";
 	}
 }
