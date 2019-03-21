@@ -72,14 +72,16 @@ public class Dictionary {
 		//TODO support UTF-8 / Umlaut
 	}
 	
-	/**
-	 * loads a dictionary
-	 * @param direction
-	 */
-	public void loadDictionary(String direction) {
+/**
+ * this function saves a dictionary to a file. The filename of the file will be the in the form [direction].txt.
+ * E.g. saving the direction "de-en" produces a file called "de-en.txt".
+ * 
+ */
+	public void saveDictionary() { 
 		
+		// TODO complete the code for this function. Use an iterator.
 	}
-
+	
 	/**
 	 * translates a single word
 	 * 

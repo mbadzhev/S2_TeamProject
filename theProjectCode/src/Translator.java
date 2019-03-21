@@ -57,12 +57,12 @@ public class Translator {
 	}
 
 	/**
-	 * Saves both the english end the german
+	 * Saves all dictionaries to seperate files in the form [direction].txt.
 	 * 
-	 * @param fileName
+	 * 
 	 */
-	public void saveDictionaryToFile(String fileName) {
-
+	public void saveDictionaryToFile() {
+		dictionary.saveDictionary();
 	}
 
 	/**
