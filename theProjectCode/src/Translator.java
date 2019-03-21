@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 public class Translator {
@@ -17,6 +18,7 @@ public class Translator {
 	 * @param translationFilename name of file to output translation
 	 */
 	public void translateFile(String filename, String translationFilename, String direction) {
+		// TODO count time and return
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			PrintWriter writer = new PrintWriter(new FileOutputStream(translationFilename));
@@ -29,7 +31,7 @@ public class Translator {
 					String translatedSentence = "";
 					for (int j = 0; j < words.length; j++) {
 						// may want to change this
-						
+
 						translatedSentence = translatedSentence.concat(dictionary.translate(words[j], direction)) + " ";
 					}
 					writer.print(translatedSentence + ". ");
@@ -46,19 +48,22 @@ public class Translator {
 	/**
 	 * loads a dictionary from a file
 	 * 
-	 * @param fileName the file name of the dictionary
+	 * @param fileName  the file name of the dictionary
+	 * @param direction the direction of the dictionary in the file
+	 * @throws IOException
 	 */
-	public void loadDictionaryFromFile(String fileName) {
-
+	public void loadDictionaryFromFile(String fileName, String direction) throws IOException {
+		dictionary.loadDictionary(fileName, direction);
+		// TODO method to check if direction is valid.
 	}
 
 	/**
-	 * Saves both the english end the german
+	 * Saves all dictionaries to seperate files in the form [direction].txt.
 	 * 
-	 * @param fileName
+	 * 
 	 */
-	public void saveDictionaryToFile(String fileName) {
-
+	public void saveDictionaryToFile() {
+		dictionary.saveDictionary();
 	}
 
 	/**
@@ -73,8 +78,46 @@ public class Translator {
 	public String translate(String input, String language, String targetLanguage) {
 		return dictionary.translate(input, language + "-" + targetLanguage);
 	}
-	
+
+	/**
+	 * translates a word from one language into an other. For example,
+	 * translate("dog", "en", "de") would return "Hund".
+	 * 
+	 * @param input    the text to be translated
+	 * @param diretion the direction of the translation
+	 * @return the translated text
+	 */
 	public String translate(String input, String direction) {
 		return dictionary.translate(input, direction);
+	}
+
+	/**
+	 * removes a word or a sentence from the dictionary
+	 * 
+	 * @param text      the word or sentence to be removed.
+	 * @param direction the dictionary the word should be removed from.
+	 */
+	public void removeFromDictionary(String text, String direction) {
+		dictionary.removeFromDictionary(text, direction);
+	}
+
+	/**
+	 * returns a whole dictionary as a String
+	 * 
+	 * @param direction the dictionary to display
+	 * @return a dictionary as a String
+	 */
+	public String displayDictionary(String direction) {
+		return dictionary.displayDictionary(direction);
+	}
+
+	/**
+	 * detects a language of a given String
+	 * 
+	 * @param text the String to detect the language from
+	 * @return the language of the String
+	 */
+	public String detectLanguage(String text) {
+		return dictionary.detectLanguage(text);
 	}
 }
