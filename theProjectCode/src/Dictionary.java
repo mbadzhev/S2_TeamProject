@@ -25,12 +25,14 @@ public class Dictionary {
 	// TODO remove enwriter and dewriter and make the skaleable
 	private PrintWriter theWriter;
 	private HashMap<String, HashMap<String, String>> partsMap;
+	private boolean automaticAdding;
 
 	/**
 	 * Reads dictionary files and loads to hashmaps Opens writers to write new words
 	 * (so it does not have to open every single time)
 	 */
 	public Dictionary() {
+		automaticAdding=true;
 		partsMap = new HashMap<String, HashMap<String, String>>();
 		partsMap.put("en-de", new HashMap<String, String>());
 		partsMap.put("de-en", new HashMap<String, String>());
@@ -272,5 +274,8 @@ public class Dictionary {
 	public String displayDictionary(String direction) {
 		// TODO work on this function
 		return "I'm a dictionary";
+	}
+	public boolean getAutomaticAdding() {
+		return automaticAdding;
 	}
 }

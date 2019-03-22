@@ -120,4 +120,7 @@ public class Translator {
 	public String detectLanguage(String text) {
 		return dictionary.detectLanguage(text);
 	}
+	public boolean getAutomaticAdding() {
+		return dictionary.getAutomaticAdding();
+	}
 }
