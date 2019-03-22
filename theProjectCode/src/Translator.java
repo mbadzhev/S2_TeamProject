@@ -52,18 +52,18 @@ public class Translator {
 	 * @param direction the direction of the dictionary in the file
 	 * @throws IOException
 	 */
-	public void loadDictionaryFromFile(String fileName, String direction) throws IOException {
+	public void loadDictionaryFromFile(String fileName, String direction) throws IOException,Exception {
 		dictionary.loadDictionary(fileName, direction);
 		// TODO method to check if direction is valid.
 	}
 
 	/**
-	 * Saves all dictionaries to seperate files in the form [direction].txt.
-	 * 
+	 * Saves given direction to .txt
+	 * @direction
 	 * 
 	 */
-	public void saveDictionaryToFile() {
-		dictionary.saveDictionary();
+	public void saveDictionaryToFile(String direction) {
+		dictionary.saveDictionary(direction);
 	}
 
 	/**
@@ -71,24 +71,12 @@ public class Translator {
 	 * translate("dog", "en", "de") would return "Hund".
 	 * 
 	 * @param input          the text to be translated
-	 * @param language       the language the text is in
-	 * @param targetLanguage the language the text should be translated to.
+	 * @param direction       direction
 	 * @return the translated text
+	 * @throws Exception unable to translate (probably wrong direction)
 	 */
-	public String translate(String input, String language, String targetLanguage) {
-		return dictionary.translate(input, language + "-" + targetLanguage);
-	}
-
-	/**
-	 * translates a word from one language into an other. For example,
-	 * translate("dog", "en", "de") would return "Hund".
-	 * 
-	 * @param input    the text to be translated
-	 * @param diretion the direction of the translation
-	 * @return the translated text
-	 */
-	public String translate(String input, String direction) {
-		return dictionary.translate(input, direction);
+	public String translate(String input, String direction) throws Exception {
+		return dictionary.translate(input,direction);
 	}
 
 	/**
