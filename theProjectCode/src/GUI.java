@@ -361,6 +361,7 @@ public class GUI extends Application
 				try
 				{
 					
+					
 				}
 				catch(Exception ex)
 				{
@@ -466,7 +467,6 @@ public class GUI extends Application
 		   public void handle(MouseEvent e) 
 		   { 
 			   //
-			   //if()
 			   
 			   message.setFill(Color.FIREBRICK);
 			   message.setFont(Font.font(20));
