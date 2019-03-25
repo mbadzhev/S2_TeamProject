@@ -11,20 +11,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class Dictionary {
-	private String endbFilename = "englishdatabase.txt";
-	private String dedbFilename = "germandatabase.txt";
 	private final static String HOST = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
 	private final static String KEY = "trnsl.1.1.20190305T204312Z.dfa16cd3173c9caf.d933df65b77daf7957e97b8e2e6571320a9823a3";
-	private PrintWriter enwriter;
-	private PrintWriter dewriter;
-	// TODO remove enwriter and dewriter and make the skaleable
-	private PrintWriter theWriter;
+	private HashMap<String,PrintWriter> writers;
 	private HashMap<String, HashMap<String, String>> partsMap;
+	private HashMap<String,String> dictionaryPaths;
+	private ArrayList<String> directions;
 	private boolean automaticAdding;
 
 	/**
@@ -33,57 +31,68 @@ public class Dictionary {
 	 */
 	public Dictionary() {
 		automaticAdding=true;
+		writers=new HashMap<String,PrintWriter>();
 		partsMap = new HashMap<String, HashMap<String, String>>();
-		partsMap.put("en-de", new HashMap<String, String>());
-		partsMap.put("de-en", new HashMap<String, String>());
-
-		// create reader and writer objects
+		dictionaryPaths=new HashMap<String,String>();
+		directions=new ArrayList<String>();
+		initialiseDirection("en-de");
+		initialiseDirection("de-en");
+	}
+	/**
+	 * Initialises hashmaps for a direction
+	 * @param direction
+	 */
+	public void initialiseDirection(String direction) {
+		partsMap.put(direction, new HashMap<String, String>());
+		directions.add(direction);
+		dictionaryPaths.put(direction, direction+".txt");
 		try {
-			enwriter = new PrintWriter(new FileOutputStream(endbFilename, true));
-			dewriter = new PrintWriter(new FileOutputStream(dedbFilename, true));
+			writers.put(direction,new PrintWriter(new FileOutputStream(new File(dictionaryPaths.get(direction)), true)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-
 	/**
-	 * Given a filename, this function parses a dictionary from that file to a given
-	 * HashMap.
+	 * Given a filename, this function parses a dictionary from that file to HashMAp of direction
+	 * If it already exists or it can't load it for whatever reason it throws Exception
 	 *
 	 * @param filename the file where the dictionary is store in.
 	 * @param map      the HashMap to store the dictionary to.
 	 * @throws IOException
 	 */
-	public void loadDictionary(String filename, String direction) throws IOException {
-		HashMap<String, String> map;
-		if (partsMap.containsKey(direction)) {
-			map = partsMap.get(direction);
-		} else {
-			// add new HashMap
-			map = new HashMap<String, String>();
-			partsMap.put(direction, map);
+	public void loadDictionary(String filename, String direction) throws Exception {
+		// Will throw exception if FileReader can't load it or already loaded
+		if (!directions.contains(direction)) {
+			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			directions.add(direction);
+			partsMap.put(direction, new HashMap<String,String>());
+			dictionaryPaths.put(direction, filename);
+			String line;
+			while (reader.ready()) {
+				line = reader.readLine();
+				String[] mappings = line.split(" ");
+				addToDictionary(mappings[0], mappings[1],direction);
+			}
+			reader.close();
 		}
-		BufferedReader reader = new BufferedReader(new FileReader(filename));
-		String line;
-		while (reader.ready()) {
-			line = reader.readLine();
-			String[] mappings = line.split(" ");
-			map.put(mappings[0], mappings[1]);
+		else {
+			throw new Exception();
 		}
-		reader.close();
 		// TODO check if the format of the dictionary is right
 		// TODO support UTF-8 / Umlaut
 	}
 
 	/**
-	 * this function saves a dictionary to a file. The filename of the file will be
-	 * the in the form [direction].txt. E.g. saving the direction "de-en" produces a
-	 * file called "de-en.txt".
+	 * this function saves a loaded dictionary using the hashmaps. 
+	 * Does nothing if there is no such loaded dictionary
 	 * 
 	 */
-	public void saveDictionary() {
-
-		// TODO complete the code for this function. Use an iterator.
+	public void saveDictionary(String direction) {
+		if (directions.contains(direction)) {
+			for (Map.Entry<String, String> keyValuePair:partsMap.get(direction).entrySet()) {
+				writers.get(direction).println(keyValuePair.getKey()+" "+keyValuePair.getValue());
+			}
+		}
 	}
 
 	/**
@@ -92,11 +101,12 @@ public class Dictionary {
 	 * @param word
 	 * @param toGerman toGerman or false toEnglish
 	 * @return translation
+	 * @throws throws exception if direction is invalid
 	 */
-	public String translate(String word, String direction) {
+	public String translate(String word, String direction) throws Exception {
 		// check if the dictionary has the direction
 		if (!partsMap.containsKey(direction)) {
-			return "-1";
+			throw new Exception();
 		}
 		HashMap<String, String> currentDictionary = partsMap.get(direction);
 
@@ -131,33 +141,15 @@ public class Dictionary {
 	 */
 	private void saveWord(String word, String translation, String direction) {
 		try {
-			theWriter = new PrintWriter(new FileOutputStream(direction + ".txt", true));
-			// TODO remvoe theWriter and create a HashMap of writers for every direction
-		} catch (FileNotFoundException e) {
-			System.out.println("fail");
-		}
-
-		HashMap<String, String> currentDictionary = partsMap.get(direction);
-
-		currentDictionary.put(word, translation);
-		if (theWriter != null) {
-			theWriter.append(word + " " + translation + "\n");
-			theWriter.flush();
-		}
-//		if (enwriter != null) {
-//			enwriter.append(word + " " + translation + "\n");
-//			enwriter.flush();
-//		}
-		try {
-			theWriter = new PrintWriter(new FileOutputStream(getInverseDirection(direction) + ".txt", true));
-		} catch (FileNotFoundException e) {
-
-		}
-		currentDictionary = partsMap.get(getInverseDirection(direction));
-		currentDictionary.put(word, translation);
-		if (theWriter != null) {
-			theWriter.append(word + " " + translation + "\n");
-			theWriter.flush();
+			writers.get(direction).println(word+" "+translation);
+			writers.get(direction).flush();
+			partsMap.get(direction).put(word, translation);
+			writers.get(getInverseDirection(direction)).println(word+" "+translation);
+			writers.get(getInverseDirection(direction)).flush();
+			partsMap.get(getInverseDirection(direction)).put(word, translation);
+		} catch (Exception e) {
+			//Probably will happen if direction is not found
+			e.printStackTrace();
 		}
 	}
 
@@ -208,6 +200,7 @@ public class Dictionary {
 	 */
 	public void removeFromDictionary(String key, String direction) {
 		partsMap.get(direction).remove(key);
+		//TODO removes during runtime but consider removing from .txt file too
 	}
 
 	/**
@@ -219,7 +212,7 @@ public class Dictionary {
 	 */
 	public void addToDictionary(String key, String value, String direction) {
 		partsMap.get(direction).put(key, value);
-
+		//TODO save on file
 	}
 
 	/**
@@ -259,10 +252,13 @@ public class Dictionary {
 //		}
 		return ret;
 	}
-
+	/**
+	 * Closes all writers in writers hashmap
+	 */
 	public void closeDictionary() {
-		enwriter.close();
-		dewriter.close();
+		for (PrintWriter writer:writers.values()) {
+			writer.close();
+		}
 	}
 
 	/**
