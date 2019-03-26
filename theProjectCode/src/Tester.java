@@ -50,12 +50,14 @@ public class Tester {
 //			System.out.println(e.getMessage());
 //		}
 		// translateFile()
-		System.out.println("translate Rotkappchen");
-		try {
-			System.out.println("words per second: " + testTrans.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en"));
-		} catch (IOException | DirectionException e) {
-			System.out.println(e.getMessage());
-		}
+		testTrans.removeFromDictionary("been", "en-de");
+		//testTrans.saveDictionaryToFile();
+//		System.out.println("translate Rotkappchen");
+//		try {
+//			System.out.println("words per second: " + testTrans.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en"));
+//		} catch (IOException | DirectionException e) {
+//			System.out.println(e.getMessage());
+//		}
 		
 		
 //		System.out.println("translate rock_climbing_explained");

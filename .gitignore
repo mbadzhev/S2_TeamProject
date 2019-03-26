@@ -1,4 +1,6 @@
 /.metadata/
 *.autosave
-*-*.txt
+*.txt
+!Rotkäppchen_en.txt
+!rock_climbing_explained.txt
 ~$*
