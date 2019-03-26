@@ -14,6 +14,19 @@ public class Tester {
 
 	public void testTranslator() {
 		Translator testTrans = new Translator();
+<<<<<<< HEAD
+		Dictionary testDict=new Dictionary();
+		System.out.println(testDict.partsMap.get("en-de").get("place"));
+		testDict.addToDictionary("blergh", "ebeih", "en-de");
+		testDict.saveDictionary();
+		//System.out.println(testTrans.translate("dog", "en-de"));
+		// TODO fix the output
+		//System.out.println(testTrans.translate("dog", "fr-es"));
+		//testTrans.translateFile("english.txt", "german.txt", "en-de");
+//		testTrans.translateFile("new.txt", "new2.txt");
+		// needs to close file writer;
+//		testTrans.dictionary.closeDictionary();
+=======
 		try {
 			System.out.println(testTrans.translate("dog", "en-de"));
 		} catch (Exception e) {
@@ -41,5 +54,6 @@ public class Tester {
 		System.out.println("translateFile with wrong direction");
 		testTrans.translateFile("rock_climbing_explained.txt", "rock_climbing_explained_de.txt", "german - english");
 		// TODO how to handle directions that do not exist yet? Shall we asks to create a new dictionary?
+>>>>>>> master
 	}
 }
