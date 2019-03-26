@@ -26,41 +26,36 @@ public class Translator {
 	public double translateFile(String filename, String translationFilename, String direction)
 			throws DirectionException, FileNotFoundException {
 		
-		
-		
 		long startTime = System.nanoTime();
 		int wordCount = 0;
 		// check if the direction is loaded in the dictionary
 		if (!dictionary.dictionaryLoaded(direction)) {
 			throw new DirectionException("the direction " + direction + " does not exist");
 		}
-		
-
 		BufferedReader reader = new BufferedReader(new FileReader(filename));
 		PrintWriter writer = new PrintWriter(new FileOutputStream(translationFilename));
 		try {
 			while (reader.ready()) {
 				String line = reader.readLine();
-				String[] sentences = line.split("[\\.?]");
-				// for every sentence
-				for (int i = 0; i < sentences.length; i++) {
-					sentences[i].trim();
-					String[] words = sentences[i].split(" ");
-					String translatedSentence = "";
-					// for every word in that sentence
-					for (int j = 0; j < words.length; j++) {
-						wordCount++;
-
-						translatedSentence = translatedSentence.concat(dictionary.translate(words[j], direction)) + " ";
-					}
-					writer.print(translatedSentence + ". ");
-				}
+				//String[] sentences = line.split("[\\.?]");
+//				// for every sentence
+//				for (int i = 0; i < sentences.length; i++) {
+//					sentences[i].trim();
+//					String[] words = sentences[i].split(" ");
+//					String translatedSentence = "";
+//					// for every word in that sentence
+//					for (int j = 0; j < words.length; j++) {
+//						wordCount++;
+//
+//						translatedSentence = translatedSentence.concat(dictionary.translate(words[j], direction)) + " ";
+//					}
+//					writer.print(translatedSentence + ". ");
+//				}
 				writer.println();
 			}
 			writer.close();
 			reader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		double elapsedTime = (System.nanoTime() - startTime) * 0.000000001;
@@ -68,15 +63,15 @@ public class Translator {
 
 	}
 
+
 	/**
 	 * loads a dictionary from a file
 	 * 
-	 * @param fileName  the file name of the dictionary
 	 * @param direction the direction of the dictionary in the file
 	 * @throws IOException
 	 */
-	public void loadDictionaryFromFile(String fileName, String direction) throws IOException, Exception {
-		dictionary.loadDictionary(fileName, direction);
+	public void loadDictionary(String direction) throws IOException, Exception {
+		dictionary.loadDictionary(direction);
 		// TODO method to check if direction is valid.
 	}
 
@@ -135,5 +130,8 @@ public class Translator {
 
 	public boolean getAutomaticAdding() {
 		return dictionary.getAutomaticAdding();
+	}
+	public void toggleAutomaticAdding() {
+		dictionary.toggleAutomaticAdding();
 	}
 }
