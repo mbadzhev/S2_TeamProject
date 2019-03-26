@@ -78,7 +78,7 @@ public class Translator {
 	}
 
 	/**
-	 * translates a word from one language into an other. For example,
+	 * translates a string from one language into an other. For example,
 	 * translate("dog", "en", "de") would return "Hund".
 	 * 
 	 * @param input     the text to be translated
@@ -87,7 +87,16 @@ public class Translator {
 	 * @throws Exception unable to translate (probably wrong direction)
 	 */
 	public String translate(String input, String direction) throws Exception {
-		return dictionary.translate(input, direction);
+		String[] lines=input.split("\n");
+		String trans="";
+		for (int j=0;j<lines.length;j++) {
+			String[] words=lines[j].split(" ");
+			for (int i=0;i<words.length;i++) {
+				trans=trans.concat(dictionary.translate(words[i], direction)+" ");
+			}
+			trans=trans.concat("\n");
+		}
+		return trans;
 	}
 
 	/**
@@ -125,5 +134,15 @@ public class Translator {
 	}
 	public void toggleAutomaticAdding() {
 		dictionary.toggleAutomaticAdding();
+	}
+	/**
+	 * adds key-value to dictionary
+	 * 
+	 * @param key
+	 * @param value
+	 * @param toEnglishToGerman
+	 */
+	public void addToDictionary(String key, String value, String direction) {
+		dictionary.addToDictionary(key,value,direction);
 	}
 }
