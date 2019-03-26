@@ -21,10 +21,20 @@ public class Translator {
 	 * @throws DirectionException    thrown if there is a problem with the
 	 *                               direction. the getMessage() to get more
 	 *                               information about the problem
+	 * @return words translated per second
 	 */
-	public void translateFile(String filename, String translationFilename, String direction)
+	public double translateFile(String filename, String translationFilename, String direction)
 			throws DirectionException, FileNotFoundException {
-		// TODO count time and return
+		
+		
+		
+		long startTime = System.nanoTime();
+		int wordCount = 0;
+		// check if the direction is loaded in the dictionary
+		if (!dictionary.dictionaryLoaded(direction)) {
+			throw new DirectionException("the direction " + direction + " does not exist");
+		}
+		
 
 		BufferedReader reader = new BufferedReader(new FileReader(filename));
 		PrintWriter writer = new PrintWriter(new FileOutputStream(translationFilename));
@@ -32,12 +42,14 @@ public class Translator {
 			while (reader.ready()) {
 				String line = reader.readLine();
 				String[] sentences = line.split("[\\.?]");
+				// for every sentence
 				for (int i = 0; i < sentences.length; i++) {
 					sentences[i].trim();
 					String[] words = sentences[i].split(" ");
 					String translatedSentence = "";
+					// for every word in that sentence
 					for (int j = 0; j < words.length; j++) {
-						// may want to change this
+						wordCount++;
 
 						translatedSentence = translatedSentence.concat(dictionary.translate(words[j], direction)) + " ";
 					}
@@ -51,6 +63,8 @@ public class Translator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		double elapsedTime = (System.nanoTime() - startTime) * 0.000000001;
+		return wordCount / elapsedTime;
 
 	}
 

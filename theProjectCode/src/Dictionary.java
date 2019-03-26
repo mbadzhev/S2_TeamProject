@@ -127,7 +127,9 @@ public class Dictionary {
 	 */
 	public String translate(String word, String direction) throws DirectionException {
 		// check if the dictionary has the direction
-		if (!partsMap.containsKey(direction)) {
+		
+		HashMap<String, String> currentDictionary = partsMap.get(direction);
+		if (currentDictionary == null) {
 			throw new DirectionException("the direction " + direction + " does not exist");
 		}
 		if (word.equals("")) {
@@ -151,6 +153,20 @@ public class Dictionary {
 			}
 		}
 		return "";
+	}
+	
+	/**
+	 * checks if a dictionary is loaded. 
+	 * @param direction the direction of the dictionary
+	 * @return true if the dictionary is loaded.
+	 */
+	public boolean dictionaryLoaded(String direction) {
+		if (partsMap.containsKey(direction)) {
+			return true;
+			
+		} else {
+			return false;
+		}
 	}
 
 	/**
