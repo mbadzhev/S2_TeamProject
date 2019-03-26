@@ -52,31 +52,11 @@ public class Tester {
 		// translateFile()
 		System.out.println("translate Rotkappchen");
 		try {
-<<<<<<< HEAD
-			long time=System.nanoTime();
-			testTrans.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en");
-			double newTime=(System.nanoTime() - time) * 0.000000001;
-			System.out.println(newTime);
-=======
-			System.out.println("words per second: " + testTrans.translateFile("RotkÃ¤ppchen.txt", "RotkÃ¤ppchen_en.txt", "de-en"));
+			System.out.println("words per second: " + testTrans.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en"));
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());
 		}
 		
-		System.out.println("translate rock_climbing_explained");
-		try {
-			System.out.println("words per second: " + testTrans.translateFile("rock_climbing_explained.txt", "rock_climbing_explained_de.txt", "en-de"));
-		} catch (IOException | DirectionException e) {
-			System.out.println(e.getMessage());
-		}
-		
-		System.out.println("translate not existing file");
-		try {
-			testTrans.translateFile("not_existing_file.txt", "output.txt", "en-de");
->>>>>>> master
-		} catch (IOException | DirectionException e) {
-			System.out.println(e.getMessage());
-		}
 		
 //		System.out.println("translate rock_climbing_explained");
 //		try {
