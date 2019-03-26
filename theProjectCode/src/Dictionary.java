@@ -1,10 +1,12 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,8 +37,12 @@ public class Dictionary {
 		partsMap = new HashMap<String, HashMap<String, String>>();
 		dictionaryPaths=new HashMap<String,String>();
 		directions=new ArrayList<String>();
-		initialiseDirection("en-de");
-		initialiseDirection("de-en");
+		try {
+			loadDictionary("en-de");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * Initialises hashmaps for a direction
@@ -47,6 +53,13 @@ public class Dictionary {
 		directions.add(direction);
 		dictionaryPaths.put(direction, direction+".txt");
 		try {
+			File file=new File(direction+".txt");
+			file.createNewFile();
+		}
+		catch (Exception e) {
+			//Already exists, no worries
+		}
+		try {
 			BufferedReader reader = new BufferedReader(new FileReader(new File(direction+".txt")));
 			String line;
 			while (reader.ready()) {
@@ -56,7 +69,6 @@ public class Dictionary {
 			}
 			reader.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		try {
 			writers.put(direction,new PrintWriter(new FileOutputStream(new File(dictionaryPaths.get(direction)), true)));
@@ -72,10 +84,11 @@ public class Dictionary {
 	 * @param map      the HashMap to store the dictionary to.
 	 * @throws IOException
 	 */
-	public void loadDictionary(String filename, String direction) throws Exception {
+	public void loadDictionary(String direction) throws Exception {
 		// Will throw exception if FileReader can't load it or already loaded
 		if (!directions.contains(direction)) {
 			initialiseDirection(direction);
+			initialiseDirection(getInverseDirection(direction));
 		}
 		else {
 			throw new Exception();
@@ -117,25 +130,25 @@ public class Dictionary {
 		if (!partsMap.containsKey(direction)) {
 			throw new DirectionException("the direction " + direction + " does not exist");
 		}
-		HashMap<String, String> currentDictionary = partsMap.get(direction);
-
 		if (word.equals("")) {
 			return word;
 		}
-		if (currentDictionary.containsKey(word)) {
-			return currentDictionary.get(word);
+		if (partsMap.get(direction).containsKey(word)) {
+			return partsMap.get(direction).get(word);
 		}
-		try {
-			URL url = new URL(HOST + "key=" + KEY + "&text=" + word + "&lang=" + direction);
-			InputStream is = url.openStream();
-			Scanner s = new Scanner(is);
-			String translation = parseJSONTranslation(s.nextLine());
-			if (!word.equals(translation)) {
-				saveWord(word, translation, direction);
+		if (automaticAdding) {
+			try {
+				URL url = new URL(HOST + "key=" + KEY + "&text=" + word + "&lang=" + direction);
+				InputStream is = url.openStream();
+				Scanner s = new Scanner(is);
+				String translation = parseJSONTranslation(s.nextLine());
+				if (!word.equals(translation)) {
+					saveWord(word, translation, direction);
+				}
+				return translation;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			return translation;
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return "";
 	}
@@ -281,5 +294,8 @@ public class Dictionary {
 	}
 	public boolean getAutomaticAdding() {
 		return automaticAdding;
+	}
+	public void toggleAutomaticAdding() {
+		automaticAdding=!automaticAdding;
 	}
 }
