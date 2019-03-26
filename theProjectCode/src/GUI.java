@@ -299,7 +299,7 @@ public class GUI extends Application
 			   try
 			   {			   
 				   System.out.println(fileName);
-				   translator.translateFile(fileName.getText(), trFileName.getText(), direction);
+				   //translator.translateFile(fileName.getText(), trFileName.getText(), direction);
 				   
 				   message.setText("File has been translated");
 			   }
