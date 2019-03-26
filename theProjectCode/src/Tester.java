@@ -9,18 +9,23 @@ public class Tester {
 
 	public void testDictionary() {
 		Dictionary testDic = new Dictionary();
-//		System.out.println(testDic.detectLanguage("kennen"));
 		testDic.closeDictionary();
 	}
 
 	public void testTranslator() {
 		Translator testTrans = new Translator();
-		System.out.println(testTrans.translate("dog", "en-de"));
-		// TODO fix the output
-		System.out.println(testTrans.translate("dog", "fr-es"));
+		try {
+			System.out.println(testTrans.translate("dog", "en-de"));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		try {
+			System.out.println(testTrans.translate("dog", "fr-es"));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		testTrans.translateFile("english.txt", "german.txt", "en-de");
-//		testTrans.translateFile("new.txt", "new2.txt");
-		// needs to close file writer;
-//		testTrans.dictionary.closeDictionary();
+
 	}
 }
