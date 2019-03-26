@@ -20,7 +20,7 @@ public class Dictionary {
 	private final static String HOST = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
 	private final static String KEY = "trnsl.1.1.20190305T204312Z.dfa16cd3173c9caf.d933df65b77daf7957e97b8e2e6571320a9823a3";
 	private HashMap<String,PrintWriter> writers;
-	private HashMap<String, HashMap<String, String>> partsMap;
+	public HashMap<String, HashMap<String, String>> partsMap;
 	private HashMap<String,String> dictionaryPaths;
 	private ArrayList<String> directions;
 	private boolean automaticAdding;
@@ -47,6 +47,18 @@ public class Dictionary {
 		directions.add(direction);
 		dictionaryPaths.put(direction, direction+".txt");
 		try {
+			BufferedReader reader = new BufferedReader(new FileReader(direction+".txt"));
+			String line;
+			while (reader.ready()) {
+				line = reader.readLine();
+				String[] mappings = line.split(" ");
+				addToDictionary(mappings[0], mappings[1],direction);
+			}
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
 			writers.put(direction,new PrintWriter(new FileOutputStream(new File(dictionaryPaths.get(direction)), true)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -63,17 +75,7 @@ public class Dictionary {
 	public void loadDictionary(String filename, String direction) throws Exception {
 		// Will throw exception if FileReader can't load it or already loaded
 		if (!directions.contains(direction)) {
-			BufferedReader reader = new BufferedReader(new FileReader(filename));
-			directions.add(direction);
-			partsMap.put(direction, new HashMap<String,String>());
-			dictionaryPaths.put(direction, filename);
-			String line;
-			while (reader.ready()) {
-				line = reader.readLine();
-				String[] mappings = line.split(" ");
-				addToDictionary(mappings[0], mappings[1],direction);
-			}
-			reader.close();
+			initialiseDirection(direction);
 		}
 		else {
 			throw new Exception();
@@ -83,15 +85,16 @@ public class Dictionary {
 	}
 
 	/**
-	 * this function saves a loaded dictionary using the hashmaps. 
-	 * Does nothing if there is no such loaded dictionary
+	 * this function saves all dictionaries using the hashmaps. 
+	 * replaces existing files
 	 * 
 	 */
-	public void saveDictionary(String direction) {
-		if (directions.contains(direction)) {
+	public void saveDictionary() {
+		for (String direction:directions) {
 			for (Map.Entry<String, String> keyValuePair:partsMap.get(direction).entrySet()) {
 				writers.get(direction).println(keyValuePair.getKey()+" "+keyValuePair.getValue());
 			}
+			writers.get(direction).flush();
 		}
 	}
 

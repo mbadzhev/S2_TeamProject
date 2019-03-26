@@ -62,8 +62,8 @@ public class Translator {
 	 * @direction
 	 * 
 	 */
-	public void saveDictionaryToFile(String direction) {
-		dictionary.saveDictionary(direction);
+	public void saveDictionaryToFile() {
+		dictionary.saveDictionary();
 	}
 
 	/**
