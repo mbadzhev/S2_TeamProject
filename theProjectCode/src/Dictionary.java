@@ -245,7 +245,7 @@ public class Dictionary {
 	 */
 	public void addToDictionary(String key, String value, String direction) {
 		partsMap.get(direction).put(key, value);
-		// TODO save on file
+		writers.get(direction).println(key+" "+value);
 	}
 
 	/**

@@ -116,13 +116,16 @@ public class GUI extends Application
 	
 		    Label textToTransl = new Label("Please enter the text you would like to translate:");
 		    textToTransl.setFont(Font.font(20));
-
 		    TextArea toTransl = new TextArea();
 		    
 		    Label textTranslation = new Label("Translation:");
 		    textTranslation.setFont(Font.font(20));
-
 		    TextArea translatedText = new TextArea();
+		    
+		    Label label = new Label("Please enter the direction:");
+		    label.setFont(Font.font(20));
+		    ComboBox<String> comboBox = new ComboBox<>();
+			comboBox.getItems().addAll("English - German", "German - English");
 		  
 		    Button button1 = new Button("Translate");
 		    button1.setFont(Font.font(15));
@@ -135,11 +138,48 @@ public class GUI extends Application
 		    grid.add(toTransl, 0, 2);
 		    grid.add(textTranslation, 1, 1);
 		    grid.add(translatedText, 1, 2);
-		    grid.add(box, 0, 4); 
+		    grid.add(label, 0, 3);
+		    grid.add(comboBox, 0, 4);
+		    grid.add(box, 0, 5); 
+		    
+		    Text message = new Text();
+			message.setFill(Color.FIREBRICK);
+			message.setFont(Font.font(20));
+			grid.add(message, 1, 3);
 		
 		    Group transl = new Group(grid);
 		    Scene scene = new Scene(transl, 1200, 600);
-		    VBox vBox = new VBox(menuBar);		    
+		    VBox vBox = new VBox(menuBar);	
+		    
+		    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
+			{ 
+				@Override 
+			    public void handle(MouseEvent e) 
+			    {
+					String direction = "";
+					   
+					try
+					{			   
+						if(comboBox.getValue().equals("English - German"))
+						{
+							   direction = "en-de";
+						}
+						else if (comboBox.getValue().equals("German - English"))
+						{
+							   direction = "de-en";
+						}
+						
+						translatedText.setText(translator.translate(toTransl.getText(), direction));
+					}
+					catch(Exception e0)
+					{
+						message.setText("Please fill out all the fields correctly");
+					}
+			    } 
+			};   
+			button1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		    
+		    
 		  
 		    menuItem0.setOnAction(e ->
 		    {
@@ -182,14 +222,7 @@ public class GUI extends Application
 		    
 		    item1.setOnAction(e -> 
 		    {
-		    	if(item1.isSelected() == true)
-		    	{
-		    		item1.setSelected(false);
-		    	}
-		    	else
-		    	{
-		    		item1.setSelected(true);
-		    	}
+		    	translator.toggleAutomaticAdding();
 		    });	    
 		    
 		    transl.getChildren().add(vBox);		    
@@ -211,7 +244,7 @@ public class GUI extends Application
 	public void transFile(Scene scene, VBox vBox, Stage primaryStage)
 	{
 		GridPane grid = new GridPane();
-		 
+		
 		grid.setHgap(15);
 		grid.setVgap(40);
 		grid.setPadding(new Insets(100, 100, 300, 300));
@@ -321,59 +354,78 @@ public class GUI extends Application
 	{			
 		GridPane grid = new GridPane();
 		 
-		grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(50);
+		grid.setHgap(15);
 		grid.setVgap(40);
 		grid.setPadding(new Insets(150, 200, 300, 300));
 		    
 		Text title = new Text("Add a new word to the dictionary:");
 		title.setFont(Font.font("Tahoma", 40));
 	
-		Label textToTransl = new Label("Please enter the english word:");
-		textToTransl.setFont(Font.font(20));
+		Label label1 = new Label("Please enter the word:");
+		label1.setFont(Font.font(20));
 		TextField toTransl = new TextField();
 		    
-		Label textTranslation = new Label("Please enter the translation:");
-		textTranslation.setFont(Font.font(20));
+		Label label2 = new Label("Please enter the translation:");
+		label2.setFont(Font.font(20));
 		TextField translatedText = new TextField();
+		
+		Label langOption = new Label("Please choose a direction");
+		langOption.setFont(Font.font(20));
+		
+		ComboBox<String> comboBox = new ComboBox<>();
+		comboBox.getItems().addAll("English - German", "German - English");
 		 
-		Button button = new Button("Translate");  
+		Button button = new Button("Add");  
 		HBox box = new HBox(10);
 		box.setAlignment(Pos.BOTTOM_RIGHT);
 		box.getChildren().add(button);
-
-		grid.add(title, 0, 0, 2, 1);
-		grid.add(textToTransl, 0, 1);
-		grid.add(toTransl, 1, 1);
-		grid.add(textTranslation, 0, 2);
-		grid.add(translatedText, 1, 2);
-		grid.add(box, 1, 3);
-		 
+		
 		//added message
 		Text message = new Text();
 		message.setFill(Color.FIREBRICK);
-    	message.setFont(Font.font(20));
-		grid.add(message, 1, 4, 3, 1);		
+		message.setFont(Font.font(20));
+
+		grid.add(title, 0, 0, 2, 1);
+		grid.add(label1, 0, 1);
+		grid.add(toTransl, 1, 1);
+		grid.add(label2, 0, 2);
+		grid.add(translatedText, 1, 2);
+		grid.add(langOption, 0, 3);
+		grid.add(comboBox, 1, 3);
+		grid.add(box, 1, 4);
+		grid.add(message, 1, 5);
 		
 		Group add = new Group(grid);
 		add.getChildren().add(vBox);
 		scene.setRoot(add); 
-		 
+		
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		{ 
 			@Override 
 		    public void handle(MouseEvent e) 
 		    { 
-//				try
-//				{
-//					//
-//					message.setText("Word has been added to the dictionary");
-//				}
-//				catch(FileNotFoundException | DirectionException | NullPointerException e1)
-//				{
-//					message.setText("Please fill out all the fields correctly");
-//				}
+				try
+				{
+					String direction = "";
+					
+					if(comboBox.getValue().equals("English - German"))
+					{
+						direction = "en-de";
+					}
+					else if (comboBox.getValue().equals("German - English"))
+					{
+						direction = "de-en";
+					}
+					
+					translator.addToDictionary(toTransl.getText(), translatedText.getText(), direction);
+					
+					message.setText("Added to dictionary");
+				}
+				catch(Exception e1)
+				{
+					message.setText("Please fill out all the fields correctly");
+				}
 		    } 
 		};   
 		button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
