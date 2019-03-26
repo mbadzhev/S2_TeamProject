@@ -37,20 +37,12 @@ public class Translator {
 		try {
 			while (reader.ready()) {
 				String line = reader.readLine();
-				//String[] sentences = line.split("[\\.?]");
-//				// for every sentence
-//				for (int i = 0; i < sentences.length; i++) {
-//					sentences[i].trim();
-//					String[] words = sentences[i].split(" ");
-//					String translatedSentence = "";
-//					// for every word in that sentence
-//					for (int j = 0; j < words.length; j++) {
-//						wordCount++;
-//
-//						translatedSentence = translatedSentence.concat(dictionary.translate(words[j], direction)) + " ";
-//					}
-//					writer.print(translatedSentence + ". ");
-//				}
+				String[] words=line.split(" ");
+				for (int i=0;i<words.length;i++) {
+					writer.print(dictionary.translate(words[i], "de-en")+" ");
+					wordCount++;
+				}
+				writer.println();
 				writer.println();
 			}
 			writer.close();
