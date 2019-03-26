@@ -41,6 +41,7 @@ public class Tester {
 		Translator testTrans = new Translator();
 
 		// translateFile()
+
 		System.out.println("translate Rotkappchen");
 		try {
 			System.out.println(
