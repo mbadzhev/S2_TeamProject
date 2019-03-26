@@ -20,7 +20,7 @@ public class Dictionary {
 	private final static String HOST = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
 	private final static String KEY = "trnsl.1.1.20190305T204312Z.dfa16cd3173c9caf.d933df65b77daf7957e97b8e2e6571320a9823a3";
 	private HashMap<String,PrintWriter> writers;
-	public HashMap<String, HashMap<String, String>> partsMap;
+	private HashMap<String, HashMap<String, String>> partsMap;
 	private HashMap<String,String> dictionaryPaths;
 	private ArrayList<String> directions;
 	private boolean automaticAdding;
@@ -47,7 +47,7 @@ public class Dictionary {
 		directions.add(direction);
 		dictionaryPaths.put(direction, direction+".txt");
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(direction+".txt"));
+			BufferedReader reader = new BufferedReader(new FileReader(new File(direction+".txt")));
 			String line;
 			while (reader.ready()) {
 				line = reader.readLine();
@@ -92,7 +92,12 @@ public class Dictionary {
 	public void saveDictionary() {
 		for (String direction:directions) {
 			for (Map.Entry<String, String> keyValuePair:partsMap.get(direction).entrySet()) {
-				writers.get(direction).println(keyValuePair.getKey()+" "+keyValuePair.getValue());
+				try {
+					PrintWriter rewriter = new PrintWriter(new FileOutputStream(new File(dictionaryPaths.get(direction)),false));
+					rewriter.println(keyValuePair.getKey()+" "+keyValuePair.getValue());
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
 			writers.get(direction).flush();
 		}
@@ -148,9 +153,9 @@ public class Dictionary {
 			writers.get(direction).println(word+" "+translation);
 			writers.get(direction).flush();
 			partsMap.get(direction).put(word, translation);
-			writers.get(getInverseDirection(direction)).println(word+" "+translation);
+			writers.get(getInverseDirection(direction)).println(translation+" "+word);
 			writers.get(getInverseDirection(direction)).flush();
-			partsMap.get(getInverseDirection(direction)).put(word, translation);
+			partsMap.get(getInverseDirection(direction)).put(translation,word);
 		} catch (Exception e) {
 			//Probably will happen if direction is not found
 			e.printStackTrace();
