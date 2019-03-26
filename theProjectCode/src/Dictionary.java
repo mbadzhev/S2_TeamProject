@@ -105,12 +105,12 @@ public class Dictionary {
 	 * @param word
 	 * @param toGerman toGerman or false toEnglish
 	 * @return translation
-	 * @throws throws exception if direction is invalid
+	 * @throws DirectionException throws exception if direction is unknown
 	 */
-	public String translate(String word, String direction) throws Exception {
+	public String translate(String word, String direction) throws DirectionException {
 		// check if the dictionary has the direction
 		if (!partsMap.containsKey(direction)) {
-			throw new Exception();
+			throw new DirectionException("the direction " + direction + " does not exist");
 		}
 		HashMap<String, String> currentDictionary = partsMap.get(direction);
 
@@ -130,7 +130,6 @@ public class Dictionary {
 			}
 			return translation;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "";
