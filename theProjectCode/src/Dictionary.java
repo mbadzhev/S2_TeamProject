@@ -129,12 +129,14 @@ public class Dictionary {
 	 * @throws DirectionException throws exception if direction is unknown
 	 */
 	public String translate(String word, String direction) throws DirectionException {
-		if (partsMap.get(direction) == null) {
-			throw new DirectionException("the direction " + direction + " does not exist");
-		}
+
+//		if (partsMap.get(direction) == null) {
+//			throw new DirectionException("the direction " + direction + " does not exist");
+//		}
 		if (word.equals("")) {
 			return word;
 		}
+		//return partsMap.get(direction).get(word);
 		if (partsMap.get(direction).containsKey(word)) {
 			return partsMap.get(direction).get(word);
 		}
@@ -255,34 +257,12 @@ public class Dictionary {
 	 * @return english or german or not found or both
 	 */
 	public String detectLanguage(String word) {
-//		int count = 0;
 		String ret = "not found";
-//		if (englishToGermanDictionary.containsKey(word)) {
-//			ret = "english";
-//			count++;
-//		}
-//		if (germanToEnglishDictionary.containsKey(word)) {
-//			ret = "german";
-//			count++;
-//		}
-//		if (count == 2) {
-//			return "both";
-//		} else if (count == 0) {
-//			URL url;
-//			try {
-//				url = new URL("https://translate.yandex.net/api/v1.5/tr.json/detect?" + "key=" + key + "&text=" + word);
-//				InputStream is = url.openStream();
-//				Scanner s = new Scanner(is);
-//				String language = parseJSONDetect(s.nextLine());
-//				if (language.equals("en")) {
-//					language = "english";
-//				} else {
-//					language = "german";
-//				}
-//				return language;
-//			} catch (Exception e) {
-//			}
-//		}
+		for (String direction:directions) {
+			if (partsMap.get(direction).containsKey(word)) {
+				return direction.substring(0,direction.lastIndexOf("-"));
+			}
+		}
 		return ret;
 	}
 

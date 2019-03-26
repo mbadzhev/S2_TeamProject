@@ -37,6 +37,7 @@ public class Tester {
 	}
 
 
+
 	public void testTranslateFile() {
 		Translator testTrans = new Translator();
 
@@ -94,6 +95,7 @@ public class Tester {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+
 		
 		// TODO how to handle directions that do not exist yet? Shall we asks to create
 		// a new dictionary?
