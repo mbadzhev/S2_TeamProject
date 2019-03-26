@@ -182,7 +182,7 @@ public class GUI extends Application
 		    
 		    item1.setOnAction(e -> 
 		    {
-		    	if(item1.isSelected() == true)
+		    	if(item1.isSelected())
 		    	{
 		    		item1.setSelected(false);
 		    	}
