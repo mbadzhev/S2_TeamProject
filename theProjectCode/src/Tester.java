@@ -5,7 +5,7 @@ public class Tester {
 	public static void main(String[] args) {
 		System.out.println("start Translation.");
 		Tester tester = new Tester();
-		tester.testTranslateFile();
+//		tester.testTranslateFile();
 //		tester.testDictionary();
 		tester.testTranslator();
 
@@ -94,11 +94,11 @@ public class Tester {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-
+		
 		// TODO how to handle directions that do not exist yet? Shall we asks to create
 		// a new dictionary?
 		testTrans.removeFromDictionary("hund", "de-en");
 
-
+		System.out.println(testTrans.displayDictionary("en-de"));
 	}
 }
