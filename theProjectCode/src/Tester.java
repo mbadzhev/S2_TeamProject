@@ -39,7 +39,7 @@ public class Tester {
 		try {
 			long time=System.nanoTime();
 			testTrans.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en");
-			long newTime=(System.nanoTime()-time)/1000000000/1314;
+			double newTime=(System.nanoTime() - time) * 0.000000001;
 			System.out.println(newTime);
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());

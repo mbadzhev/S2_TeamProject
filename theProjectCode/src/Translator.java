@@ -22,48 +22,26 @@ public class Translator {
 	 *                               direction. the getMessage() to get more
 	 *                               information about the problem
 	 */
-//	public void translateFile(String filename, String translationFilename, String direction)
-//			throws DirectionException, FileNotFoundException {
-//		// TODO count time and return
-//
-//		BufferedReader reader = new BufferedReader(new FileReader(filename));
-//		PrintWriter writer = new PrintWriter(new FileOutputStream(translationFilename));
-//		try {
-//			while (reader.ready()) {
-//				String line = reader.readLine();
-//				String[] sentences = line.split("[\\.?]");
-//				for (int i = 0; i < sentences.length; i++) {
-//					sentences[i].trim();
-//					String[] words = sentences[i].split(" ");
-//					String translatedSentence = "";
-//					for (int j = 0; j < words.length; j++) {
-//						// may want to change this
-//
-//						translatedSentence = translatedSentence.concat(dictionary.translate(words[j], direction)) + " ";
-//					}
-//					writer.print(translatedSentence + ". ");
-//				}
-//				writer.println();
-//			}
-//			writer.close();
-//			reader.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//	}
+	public void translateFile(String filename, String translationFilename, String direction)
+			throws DirectionException, FileNotFoundException {
+		// TODO count time and return
 
-	public void translateFile(String filename,String translationFilename,String direction) throws DirectionException, FileNotFoundException {
 		BufferedReader reader = new BufferedReader(new FileReader(filename));
 		PrintWriter writer = new PrintWriter(new FileOutputStream(translationFilename));
-		
 		try {
 			while (reader.ready()) {
 				String line = reader.readLine();
-				String[] words=line.split(" ");
-				for (int i=0;i<words.length;i++) {
-					writer.print(dictionary.translate(words[i], direction));
+				String[] sentences = line.split("[\\.?]");
+				for (int i = 0; i < sentences.length; i++) {
+					sentences[i].trim();
+					String[] words = sentences[i].split(" ");
+					String translatedSentence = "";
+					for (int j = 0; j < words.length; j++) {
+						// may want to change this
+
+						translatedSentence = translatedSentence.concat(dictionary.translate(words[j], direction)) + " ";
+					}
+					writer.print(translatedSentence + ". ");
 				}
 				writer.println();
 			}
@@ -73,7 +51,10 @@ public class Translator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
+
+
 	/**
 	 * loads a dictionary from a file
 	 * 
