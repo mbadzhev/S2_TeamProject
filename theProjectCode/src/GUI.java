@@ -1,5 +1,7 @@
 import java.awt.Event;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.stream.DoubleStream;
 
 import javafx.application.Application;
@@ -97,7 +99,6 @@ public class GUI extends Application
 		    
 		    GridPane grid = new GridPane();
 		    
-		    grid.setGridLinesVisible(true);
 		    ColumnConstraints column1 = new ColumnConstraints();
 		    column1.setPercentWidth(50);
 		    ColumnConstraints column2 = new ColumnConstraints();
@@ -114,16 +115,20 @@ public class GUI extends Application
 		    text1.setFont(Font.font("Tahoma", 40)); 
 	
 		    Label textToTransl = new Label("Please enter the text you would like to translate:");
-		    textToTransl.setFont(Font.font(15));
-
+		    textToTransl.setFont(Font.font(20));
 		    TextArea toTransl = new TextArea();
 		    
 		    Label textTranslation = new Label("Translation:");
-		    textTranslation.setFont(Font.font(15));
-
+		    textTranslation.setFont(Font.font(20));
 		    TextArea translatedText = new TextArea();
+		    
+		    Label label = new Label("Please enter the direction:");
+		    label.setFont(Font.font(20));
+		    ComboBox<String> comboBox = new ComboBox<>();
+			comboBox.getItems().addAll("English - German", "German - English");
 		  
-		    Button button1 = new Button("Submit");  
+		    Button button1 = new Button("Translate");
+		    button1.setFont(Font.font(15));
 			HBox box = new HBox(10);
 			box.setAlignment(Pos.BOTTOM_RIGHT);
 			box.getChildren().add(button1);
@@ -133,11 +138,48 @@ public class GUI extends Application
 		    grid.add(toTransl, 0, 2);
 		    grid.add(textTranslation, 1, 1);
 		    grid.add(translatedText, 1, 2);
-		    grid.add(box, 0, 4); 
+		    grid.add(label, 0, 3);
+		    grid.add(comboBox, 0, 4);
+		    grid.add(box, 0, 5); 
+		    
+		    Text message = new Text();
+			message.setFill(Color.FIREBRICK);
+			message.setFont(Font.font(20));
+			grid.add(message, 1, 3);
 		
 		    Group transl = new Group(grid);
 		    Scene scene = new Scene(transl, 1200, 600);
-		    VBox vBox = new VBox(menuBar);		    
+		    VBox vBox = new VBox(menuBar);	
+		    
+		    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
+			{ 
+				@Override 
+			    public void handle(MouseEvent e) 
+			    {
+					String direction = "";
+					   
+					try
+					{			   
+						if(comboBox.getValue().equals("English - German"))
+						{
+							   direction = "en-de";
+						}
+						else if (comboBox.getValue().equals("German - English"))
+						{
+							   direction = "de-en";
+						}
+						
+						translatedText.setText(translator.translate(toTransl.getText(), direction));
+					}
+					catch(Exception e0)
+					{
+						message.setText("Please fill out all the fields correctly");
+					}
+			    } 
+			};   
+			button1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		    
+		    
 		  
 		    menuItem0.setOnAction(e ->
 		    {
@@ -165,12 +207,12 @@ public class GUI extends Application
     
 		    menuItem3.setOnAction(e -> 
 		    {
-		    	loadDic(scene, vBox);
+		    	loadDic(scene, vBox, primaryStage);
 		    });
 		    
 		    menuItem4.setOnAction(e -> 
 		    {
-		    	displayDic(scene, vBox);
+		    	displayDic(scene, vBox, primaryStage);
 		    });
 		    
 		    menuItem5.setOnAction(e -> 
@@ -180,23 +222,16 @@ public class GUI extends Application
 		    
 		    item1.setOnAction(e -> 
 		    {
-		    	if(item1.isSelected() == true)
-		    	{
-		    		item1.setSelected(false);
-		    	}
-		    	else
-		    	{
-		    		item1.setSelected(true);
-		    	}
+		    	translator.toggleAutomaticAdding();
 		    });	    
 		    
 		    transl.getChildren().add(vBox);		    
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		}
-		catch(Exception e) 
+		catch(Exception ex) 
 		{
-			e.printStackTrace();
+			ex.printStackTrace();
 		}
 	}
 	
@@ -209,10 +244,10 @@ public class GUI extends Application
 	public void transFile(Scene scene, VBox vBox, Stage primaryStage)
 	{
 		GridPane grid = new GridPane();
-		 
-		grid.setHgap(30);
+		
+		grid.setHgap(15);
 		grid.setVgap(40);
-		grid.setPadding(new Insets(150, 100, 300, 300));
+		grid.setPadding(new Insets(100, 100, 300, 300));
 		grid.setMinSize(500, 500); 
 		    
 		Text title = new Text("Translate from file");
@@ -238,6 +273,8 @@ public class GUI extends Application
 		comboBox.getItems().addAll("English - German", "German - English");
 		 
 		Button button1 = new Button("Translate"); 
+		button1.setFont(Font.font(15));
+		//
 		HBox box = new HBox(10);
 		box.setAlignment(Pos.BOTTOM_RIGHT);
 		box.getChildren().add(button1);
@@ -256,7 +293,7 @@ public class GUI extends Application
 		Text message = new Text();
 		message.setFill(Color.FIREBRICK);
 		message.setFont(Font.font(20));
-		grid.add(message, 1, 5, 2, 1);
+		grid.add(message, 1, 5, 3, 1);
 		 
 		Group transFile = new Group(grid);
 		transFile.getChildren().add(vBox);
@@ -272,8 +309,8 @@ public class GUI extends Application
 			    File file = fileChooser.showOpenDialog(primaryStage); 
 			  
 			    if (file != null) 
-			    {
-			    	 fileName.setText(file.getAbsolutePath()); 
+			    { 
+			    	 fileName.setText(file.getName());
 			    }     
 			} 
 		}; 
@@ -283,29 +320,30 @@ public class GUI extends Application
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		 { 
 		   @Override 
-		   public void handle(MouseEvent e) 
+		   public void handle(MouseEvent event) 
 		   { 
 			   String direction = "";
-
-			   if(comboBox.getValue().equals("English - German"))
-			   {
-				   direction = "en-de";
-			   }
-			   else if (comboBox.getValue().equals("German - English"))
-			   {
-				   direction = "de-en";
-			   }
 			   
 			   try
 			   {			   
+				   if(comboBox.getValue().equals("English - German"))
+				   {
+					   direction = "en-de";
+				   }
+				   else if (comboBox.getValue().equals("German - English"))
+				   {
+					   direction = "de-en";
+				   }
 				   System.out.println(fileName);
 				   translator.translateFile(fileName.getText(), trFileName.getText(), direction);
 				   
 				   message.setText("File has been translated");
+				   
+				   
 			   }
-			   catch(Exception exception)
+			   catch(FileNotFoundException | DirectionException | NullPointerException e)
 			   {
-				   message.setText("Please fill out all fields");
+				   message.setText("Please fill out all the fields correctly");
 			   }
 		   } 
 		 };   
@@ -316,43 +354,52 @@ public class GUI extends Application
 	{			
 		GridPane grid = new GridPane();
 		 
-		grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(50);
+		grid.setHgap(15);
 		grid.setVgap(40);
 		grid.setPadding(new Insets(150, 200, 300, 300));
 		    
 		Text title = new Text("Add a new word to the dictionary:");
 		title.setFont(Font.font("Tahoma", 40));
 	
-		Label textToTransl = new Label("Please enter the english word:");
-		textToTransl.setFont(Font.font(20));
+		Label label1 = new Label("Please enter the word:");
+		label1.setFont(Font.font(20));
 		TextField toTransl = new TextField();
 		    
-		Label textTranslation = new Label("Please enter the translation:");
-		textTranslation.setFont(Font.font(20));
+		Label label2 = new Label("Please enter the translation:");
+		label2.setFont(Font.font(20));
 		TextField translatedText = new TextField();
+		
+		Label langOption = new Label("Please choose a direction");
+		langOption.setFont(Font.font(20));
+		
+		ComboBox<String> comboBox = new ComboBox<>();
+		comboBox.getItems().addAll("English - German", "German - English");
 		 
-		Button button = new Button("Translate");  
+		Button button = new Button("Add");  
 		HBox box = new HBox(10);
 		box.setAlignment(Pos.BOTTOM_RIGHT);
 		box.getChildren().add(button);
-
-		grid.add(title, 0, 0, 2, 1);
-		grid.add(textToTransl, 0, 1);
-		grid.add(toTransl, 1, 1);
-		grid.add(textTranslation, 0, 2);
-		grid.add(translatedText, 1, 2);
-		grid.add(box, 1, 3);
-		 
+		
 		//added message
 		Text message = new Text();
-		grid.add(message, 1, 4);		
+		message.setFill(Color.FIREBRICK);
+		message.setFont(Font.font(20));
+
+		grid.add(title, 0, 0, 2, 1);
+		grid.add(label1, 0, 1);
+		grid.add(toTransl, 1, 1);
+		grid.add(label2, 0, 2);
+		grid.add(translatedText, 1, 2);
+		grid.add(langOption, 0, 3);
+		grid.add(comboBox, 1, 3);
+		grid.add(box, 1, 4);
+		grid.add(message, 1, 5);
 		
 		Group add = new Group(grid);
 		add.getChildren().add(vBox);
 		scene.setRoot(add); 
-		 
+		
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		{ 
 			@Override 
@@ -360,14 +407,24 @@ public class GUI extends Application
 		    { 
 				try
 				{
+					String direction = "";
 					
+					if(comboBox.getValue().equals("English - German"))
+					{
+						direction = "en-de";
+					}
+					else if (comboBox.getValue().equals("German - English"))
+					{
+						direction = "de-en";
+					}
 					
+					translator.addToDictionary(toTransl.getText(), translatedText.getText(), direction);
+					
+					message.setText("Added to dictionary");
 				}
-				catch(Exception ex)
+				catch(Exception e1)
 				{
-		    	message.setFill(Color.FIREBRICK);
-		    	message.setFont(Font.font(20));
-		    	message.setText("Word added to dictionary");
+					message.setText("Please fill out all the fields correctly");
 				}
 		    } 
 		};   
@@ -404,7 +461,9 @@ public class GUI extends Application
 		grid.add(box, 1, 3); 
 	    
 		Text message = new Text();
-		grid.add(message, 1, 4);
+		message.setFill(Color.FIREBRICK);
+		message.setFont(Font.font(20));
+		grid.add(message, 1, 4, 3, 1);
 		 
 	    Group remove = new Group(grid);
 	    remove.getChildren().add(vBox);
@@ -415,24 +474,30 @@ public class GUI extends Application
 		   @Override 
 		   public void handle(MouseEvent e) 
 		   { 
-			   //
+//			   try
+//			   {			   
+//				   
+//				   
+//				   message.setText("Word removed to dictionary");
+//			   }
+//			   catch(FileNotFoundException | DirectionException | NullPointerException e2)
+//			   {
+//				   message.setText("Please fill out all the fields correctly");
+//			   }
 			   
-			   message.setFill(Color.FIREBRICK);
-			   message.setFont(Font.font(20));
-			   message.setText("Word removed to dictionary");
 		   } 
 		 };   
 		 button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	    
 	}
 	
-	public void loadDic(Scene scene, VBox vBox)
+	public void loadDic(Scene scene, VBox vBox, Stage primaryStage)
 	{
 		GridPane grid = new GridPane();
 		 
 		grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(50);
+		grid.setHgap(15);
 		grid.setVgap(40);
 		grid.setPadding(new Insets(150, 100, 300, 300));
 		grid.setMinSize(200, 200); 
@@ -443,34 +508,66 @@ public class GUI extends Application
 		Label label = new Label("Please enter the details of the file:");
 		label.setFont(Font.font(20));
 		TextField fileName = new TextField();
-		 
-		Button button = new Button("Submit");  
+		
+		Button button = new Button("Search");  
 		HBox box = new HBox(10);
 		box.setAlignment(Pos.BOTTOM_RIGHT);
 		box.getChildren().add(button);
+		 
+		Button button2 = new Button("Load");
+		button2.setFont(Font.font(15));
+		HBox box2 = new HBox(10);
+		box2.setAlignment(Pos.BOTTOM_RIGHT);
+		box2.getChildren().add(button2);
 
 		grid.add(title, 0, 0, 2, 1);
 		grid.add(label, 0, 1);
 		grid.add(fileName, 1, 1);
-		grid.add(box, 1, 3); 
+		grid.add(box, 2, 1); 
+		grid.add(box2, 2, 3); 
 	
 		Text message = new Text();
-		grid.add(message, 1, 4);
+		message.setFill(Color.FIREBRICK);
+		message.setFont(Font.font(20));
+		grid.add(message, 1, 4, 3, 1);
 		 
 	    Group loadDic = new Group(grid);
 	    loadDic.getChildren().add(vBox);
 	    scene.setRoot(loadDic); 
+	    
+	    FileChooser fileChooser = new FileChooser(); 
+		 
+		EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() 
+		{
+			public void handle(ActionEvent e) 
+			{ 
+				// get the file selected 
+			    File file = fileChooser.showOpenDialog(primaryStage); 
+			  
+			    if (file != null) 
+			    {
+			    	 fileName.setText(file.getName());
+			    }     
+			} 
+		}; 
+		button.setOnAction(event);
 	    
 	    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		 { 
 		   @Override 
 		   public void handle(MouseEvent e) 
 		   { 
-			   //
-			   
-			   message.setFill(Color.FIREBRICK);
-			   message.setFont(Font.font(20));
-			   message.setText("Dictionary loaded from file");
+//			   try
+//			   {			   
+//				   //whats with direction???
+//				   translator.loadDictionaryFromFile(fileName.getText(), direction);
+//				   
+//				   message.setText("Dictionary loaded from file");
+//			   }
+//			   catch(FileNotFoundException | NullPointerException e3)
+//			   {
+//				   message.setText("Please fill out all the fields correctly");
+//			   }  
 		   } 
 		 };   
 		 button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -478,13 +575,13 @@ public class GUI extends Application
 	    
 	}
 	
-	public void displayDic(Scene scene, VBox vBox)
+	public void displayDic(Scene scene, VBox vBox, Stage primaryStage)
 	{
 		GridPane grid = new GridPane();
 		 
 		grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(50);
+		grid.setHgap(15);
 		grid.setVgap(40);
 		grid.setPadding(new Insets(150, 100, 300, 300));
 		grid.setMinSize(200, 200); 
@@ -492,38 +589,71 @@ public class GUI extends Application
 		Text title = new Text("Display the Dictionary:");
 		title.setFont(Font.font("Tahoma", 40)); 
 
-		Label textToTransl = new Label("Please enter the details of the dictionary:");
-		textToTransl.setFont(Font.font(20));
-		TextField toTransl = new TextField();
-		 
-		Button button = new Button("Submit");  
+		Label label = new Label("Please enter the details of the dictionary:");
+		label.setFont(Font.font(20));
+		TextField fileName = new TextField();
+		
+		Button button = new Button("Search");  
 		HBox box = new HBox(10);
 		box.setAlignment(Pos.BOTTOM_RIGHT);
 		box.getChildren().add(button);
+		 
+		Button button2 = new Button("Display");
+		button2.setFont(Font.font(15));
+		HBox box2 = new HBox(10);
+		box2.setAlignment(Pos.BOTTOM_RIGHT);
+		box2.getChildren().add(button2);
 
 		grid.add(title, 0, 0, 2, 1);
-		grid.add(textToTransl, 0, 1);
-		grid.add(toTransl, 1, 1);
-		grid.add(box, 1, 3); 
+		grid.add(label, 0, 1);
+		grid.add(fileName, 1, 1);
+		grid.add(box, 2, 1); 
+		grid.add(box2, 2, 3); 
 	
 		//the text in the dictionary
-		Text dictionary = new Text();
-		grid.add(dictionary, 1, 4);
+		Text message = new Text();
+		message.setFill(Color.FIREBRICK);
+		message.setFont(Font.font(20));
+		grid.add(message, 1, 3, 3, 1);
 		 
 	    Group displayDic = new Group(grid);
 	    displayDic.getChildren().add(vBox);
 	    scene.setRoot(displayDic); 
+	    
+	    FileChooser fileChooser = new FileChooser(); 
+		 
+		EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() 
+		{
+			public void handle(ActionEvent e) 
+			{ 
+				// get the file selected 
+			    File file = fileChooser.showOpenDialog(primaryStage); 
+			  
+			    if (file != null) 
+			    {
+			    	 fileName.setText(file.getName()); 
+			    }     
+			} 
+		}; 
+		button.setOnAction(event); 
 	    
 	    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		 { 
 		   @Override 
 		   public void handle(MouseEvent e) 
 		   { 
-			   //translator.displayDictionary();
-			   
-//		    	dictionary.setFill(Color.FIREBRICK);
-//		    	dictionary.setFont(Font.font(20));
-//		    	dictionary.setText("Word added to dictionary");
+			   try
+			   {	
+				   //searching by direction!!!!
+				   
+				   translator.displayDictionary(fileName.getText());
+				   
+				   message.setText("Dictionary loaded from file");
+			   }
+			   catch(NullPointerException e4)
+			   {
+				   message.setText("Please fill out all the fields correctly");
+			   }
 		   } 
 		 };   
 		 button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -536,30 +666,28 @@ public class GUI extends Application
 		 
 		 grid.setGridLinesVisible(true);
 		 grid.setAlignment(Pos.CENTER);
+		 
 		 grid.setHgap(50);
 		 grid.setVgap(40);
-		 grid.setPadding(new Insets(150, 100, 300, 300));
+		 grid.setPadding(new Insets(150, 100, 330, 330));
 		 grid.setMinSize(200, 200); 
 		    
-		 Text title = new Text("Save the Dictionary to file:");
-		 title.setFont(Font.font("Tahoma", 40)); 
-	
-		 Label textToTransl = new Label("Please enter the details of the dictionary:");
-		 textToTransl.setFont(Font.font(20));
-		 TextField toTransl = new TextField();
+		 Text title = new Text("Save the Dictionaries to file:");
+		 title.setFont(Font.font("Tahoma", 40));
 		 
-		 Button button = new Button("Submit");  
+		 Button button = new Button("Save");
+		 button.setFont(Font.font(25));
 		 HBox box = new HBox(10);
-		 box.setAlignment(Pos.BOTTOM_RIGHT);
+		 box.setAlignment(Pos.CENTER);
 		 box.getChildren().add(button);
 
-		grid.add(title, 0, 0, 2, 1);
-		grid.add(textToTransl, 0, 1);
-		grid.add(toTransl, 1, 1);
-		grid.add(box, 1, 3); 
+		grid.add(title, 0, 0);
+		grid.add(box, 0, 1); 
 	
 		Text message = new Text();
-		grid.add(message, 1, 4);
+		message.setFill(Color.FIREBRICK);
+		message.setFont(Font.font(20));
+		grid.add(message, 0, 2);
 		 
 	    Group saveDic = new Group(grid);
 	    saveDic.getChildren().add(vBox);
@@ -570,15 +698,18 @@ public class GUI extends Application
 		   @Override 
 		   public void handle(MouseEvent e) 
 		   { 
-			   translator.saveDictionaryToFile();
-			   
-			   message.setFill(Color.FIREBRICK);
-			   message.setFont(Font.font(20));
-			   message.setText("Dictionary saved to file");
+			   try
+			   {			   
+				   translator.saveDictionaryToFile();
+				   
+				   message.setText("Dictionary saved to file");
+			   }
+			   catch(Exception e5)
+			   {
+				  
+			   }
 		   } 
 		 };   
 		 button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	    
-	    
 	}
 }

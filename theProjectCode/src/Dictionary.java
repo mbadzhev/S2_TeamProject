@@ -247,7 +247,7 @@ public class Dictionary {
 	 */
 	public void addToDictionary(String key, String value, String direction) {
 		partsMap.get(direction).put(key, value);
-		// TODO save on file
+		writers.get(direction).println(key+" "+value);
 	}
 
 	/**
@@ -282,8 +282,11 @@ public class Dictionary {
 	 * @return a dictionary as a String
 	 */
 	public String displayDictionary(String direction) {
-		// TODO work on this function
-		return "I'm a dictionary";
+		String output = "";
+		for (Map.Entry<String, String> keyValuePair : partsMap.get(direction).entrySet()) {
+			output += keyValuePair.getKey() + " <> " + keyValuePair.getValue() + "\r\n";
+		}
+		return output;
 	}
 
 	public boolean getAutomaticAdding() {
