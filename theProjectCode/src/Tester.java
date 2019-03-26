@@ -30,7 +30,7 @@ public class Tester {
 		// translateFile()
 		System.out.println("translate Rotkappchen");
 		try {
-			testTrans.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en");
+			System.out.println("elapsed time: " + testTrans.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en"));
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());
 		}
