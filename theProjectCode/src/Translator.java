@@ -25,9 +25,16 @@ public class Translator {
 	 */
 	public double translateFile(String filename, String translationFilename, String direction)
 			throws DirectionException, FileNotFoundException {
-		// TODO count time and return
+		
+		
+		
 		long startTime = System.nanoTime();
 		int wordCount = 0;
+		// check if the direction is loaded in the dictionary
+		if (!dictionary.dictionaryLoaded(direction)) {
+			throw new DirectionException("the direction " + direction + " does not exist");
+		}
+		
 
 		BufferedReader reader = new BufferedReader(new FileReader(filename));
 		PrintWriter writer = new PrintWriter(new FileOutputStream(translationFilename));

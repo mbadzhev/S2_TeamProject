@@ -4,12 +4,27 @@ public class Tester {
 	public static void main(String[] args) {
 		System.out.println("start Translation.");
 		Tester tester = new Tester();
+//		tester.testDictionary();
 		tester.testTranslator();
+		
 		System.out.println("Translation done.");
 	}
 
 	public void testDictionary() {
 		Dictionary testDic = new Dictionary();
+		
+		try {
+			System.out.println(testDic.translate("hello", "en-de"));
+		} catch (DirectionException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		try {
+			System.out.println(testDic.translate("hello", "en-pl"));
+		} catch (DirectionException e) {
+			System.out.println(e.getMessage());
+		}
+		
 		testDic.closeDictionary();
 	}
 
@@ -30,14 +45,14 @@ public class Tester {
 		// translateFile()
 		System.out.println("translate Rotkappchen");
 		try {
-			System.out.println("elapsed time: " + testTrans.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en"));
+			System.out.println("words per second: " + testTrans.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en"));
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());
 		}
 		
 		System.out.println("translate rock_climbing_explained");
 		try {
-			testTrans.translateFile("rock_climbing_explained.txt", "rock_climbing_explained_de.txt", "en-de");
+			System.out.println("words per second: " + testTrans.translateFile("rock_climbing_explained.txt", "rock_climbing_explained_de.txt", "en-de"));
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());
 		}
