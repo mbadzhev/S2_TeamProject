@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.Date;
 
 public class Tester {
 	public static void main(String[] args) {
@@ -9,6 +10,12 @@ public class Tester {
 		tester.testTranslator();
 
 		System.out.println("Translation done.");
+//		try {
+//			trans.loadDictionary("fr-en");
+//			trans.translateFile("french.txt","frenchout.txt", "fr-en");
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//		}
 	}
 
 	public void testDictionary() {
@@ -29,6 +36,7 @@ public class Tester {
 		testDic.closeDictionary();
 	}
 
+
 	public void testTranslateFile() {
 		Translator testTrans = new Translator();
 
@@ -43,8 +51,7 @@ public class Tester {
 
 		System.out.println("translate rock_climbing_explained");
 		try {
-			System.out.println("words per second: " + testTrans.translateFile("rock_climbing_explained.txt",
-					"rock_climbing_explained_de.txt", "en-de"));
+			System.out.println("words per second: " + testTrans.translateFile("rock_climbing_explained.txt","rock_climbing_explained_de.txt", "en-de"));
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());
 		}
@@ -90,6 +97,7 @@ public class Tester {
 		// TODO how to handle directions that do not exist yet? Shall we asks to create
 		// a new dictionary?
 		testTrans.removeFromDictionary("hund", "de-en");
+
 
 	}
 }

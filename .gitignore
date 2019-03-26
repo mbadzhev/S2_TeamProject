@@ -2,3 +2,5 @@
 *.autosave
 *-*.txt
 ~$*
+*en.txt
+*de.txt
