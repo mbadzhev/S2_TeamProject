@@ -214,7 +214,7 @@ public class GUI extends Application
 		 
 		grid.setHgap(15);
 		grid.setVgap(40);
-		grid.setPadding(new Insets(150, 100, 300, 300));
+		grid.setPadding(new Insets(100, 100, 300, 300));
 		grid.setMinSize(500, 500); 
 		    
 		Text title = new Text("Translate from file");
@@ -276,8 +276,8 @@ public class GUI extends Application
 			    File file = fileChooser.showOpenDialog(primaryStage); 
 			  
 			    if (file != null) 
-			    {
-			    	 fileName.setText(file.getAbsolutePath()); 
+			    { 
+			    	 fileName.setText(file.getName());
 			    }     
 			} 
 		}; 
@@ -305,6 +305,8 @@ public class GUI extends Application
 				   translator.translateFile(fileName.getText(), trFileName.getText(), direction);
 				   
 				   message.setText("File has been translated");
+				   
+				   
 			   }
 			   catch(FileNotFoundException | DirectionException | NullPointerException e)
 			   {
@@ -492,7 +494,7 @@ public class GUI extends Application
 			  
 			    if (file != null) 
 			    {
-			    	 fileName.setText(file.getAbsolutePath()); 
+			    	 fileName.setText(file.getName());
 			    }     
 			} 
 		}; 
@@ -577,7 +579,7 @@ public class GUI extends Application
 			  
 			    if (file != null) 
 			    {
-			    	 fileName.setText(file.getAbsolutePath()); 
+			    	 fileName.setText(file.getName()); 
 			    }     
 			} 
 		}; 
