@@ -45,12 +45,14 @@ public class Tester {
 //		}
 //
 //		try {
-//			System.out.println(testTrans.translate("dog", "fr-es"));
+//			testTrans.loadDictionary("fr-es");
+//			System.out.println(testTrans.translate("merde", "fr-es"));
 //		} catch (Exception e) {
 //			System.out.println(e.getMessage());
 //		}
+//		System.out.println(testTrans.detectLanguage("without"));
 		// translateFile()
-		testTrans.removeFromDictionary("been", "en-de");
+		//testTrans.removeFromDictionary("been", "en-de");
 		//testTrans.saveDictionaryToFile();
 //		System.out.println("translate Rotkappchen");
 //		try {
@@ -58,7 +60,12 @@ public class Tester {
 //		} catch (IOException | DirectionException e) {
 //			System.out.println(e.getMessage());
 //		}
-		
+		System.out.println("translate bible");
+		try {
+			System.out.println("words per second: " + testTrans.translateFile("bibel.txt", "bibel_en.txt", "de-en"));
+		} catch (IOException | DirectionException e) {
+			System.out.println(e.getMessage());
+		}
 		
 //		System.out.println("translate rock_climbing_explained");
 //		try {
