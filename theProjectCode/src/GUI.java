@@ -50,7 +50,18 @@ public class GUI extends Application
 {
 	private Translator translator;
 	
+	/**
+	 * main method
+	 */
 	
+	public static void main(String[] args) 
+	{
+		launch(args);
+	}
+	
+	/**
+	 * method to start the program
+	 */
 	
 	@Override
 	public void start(Stage primaryStage) 
@@ -98,7 +109,7 @@ public class GUI extends Application
 			settings.getItems().add(item1);    
 		    
 //Translator page
-		    
+			
 		    GridPane grid = new GridPane();
 		    
 		    ColumnConstraints column1 = new ColumnConstraints();
@@ -126,8 +137,8 @@ public class GUI extends Application
 		    
 		    Label label = new Label("Please enter the direction:");
 		    label.setFont(Font.font(20));
-		    ComboBox<String> comboBox = new ComboBox<>();
-			comboBox.getItems().addAll(translator.getLoadedDictionaries());
+		    ComboBox<String> comboBoxTransl = new ComboBox<>();
+			comboBoxTransl.getItems().addAll(translator.getLoadedDictionaries());
 		  
 		    Button button1 = new Button("Translate");
 		    button1.setFont(Font.font(15));
@@ -141,7 +152,7 @@ public class GUI extends Application
 		    grid.add(textTranslation, 1, 1);
 		    grid.add(translatedText, 1, 2);
 		    grid.add(label, 0, 3);
-		    grid.add(comboBox, 0, 4);
+		    grid.add(comboBoxTransl, 0, 4);
 		    grid.add(box, 0, 5); 
 		    
 		    Text message = new Text();
@@ -154,6 +165,7 @@ public class GUI extends Application
 		    scene.setFill(Color.LIGHTSTEELBLUE);
 		    VBox vBox = new VBox(menuBar);	
 		    
+		    //clicking on "Translate" button
 		    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 			{ 
 				@Override 
@@ -161,7 +173,7 @@ public class GUI extends Application
 			    {					   
 					try
 					{								
-						translatedText.setText(translator.translate(toTransl.getText(), comboBox.getValue()));
+						translatedText.setText(translator.translate(toTransl.getText(), comboBoxTransl.getValue()));
 						
 						message.setText("");
 					}
@@ -173,12 +185,11 @@ public class GUI extends Application
 			};   
 			button1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		    
+//Menu options when selected
 		    menuItem0.setOnAction(e ->
 		    {
-		    	//update comboBox with newly loaded dictionaries
-		    	ComboBox<String> comboBox2 = new ComboBox<>();
-		    	comboBox2.getItems().addAll(translator.getLoadedDictionaries());
-		    	grid.add(comboBox2, 0, 4);
+		    	comboBoxTransl.getItems().clear();
+		    	comboBoxTransl.getItems().addAll(translator.getLoadedDictionaries());
 		    	
 		    	if(!transl.getChildren().contains(vBox)) 
 		    	{
@@ -231,11 +242,13 @@ public class GUI extends Application
 		}
 	}
 	
-	public static void main(String[] args) 
-	{
-		launch(args);
-		
-	}
+	/**
+	 * method to handle the user input for translating a file
+	 * 
+	 * @param scene The scene for the GUI
+	 * @param vBox The vBox that includes the menu bar
+	 * @param primaryStage The stage of the project
+	 */
 	
 	public void transFile(Scene scene, VBox vBox, Stage primaryStage)
 	{
@@ -296,6 +309,7 @@ public class GUI extends Application
 		 
 		FileChooser fileChooser = new FileChooser(); 
 		 
+		//click on button "Search" to select a file
 		EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() 
 		{
 			public void handle(ActionEvent e) 
@@ -311,7 +325,7 @@ public class GUI extends Application
 		}; 
 		button.setOnAction(event); 
 		
-		
+		//runs when "Translate" button is selected
 		EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		 { 
 		   @Override 
@@ -359,6 +373,13 @@ public class GUI extends Application
 		 };   
 		 button1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	}
+	
+	/**
+	 * method to handle the user input for adding of new words to a dictionary
+	 * 
+	 * @param scene The scene for the GUI
+	 * @param vBox The vBox that includes the menu bar
+	 */
 	
 	public void add(Scene scene, VBox vBox)
 	{			
@@ -435,8 +456,14 @@ public class GUI extends Application
 		    } 
 		};   
 		button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-		 
 	}
+	
+	/**
+	 * method to handle the user input for removing a word from a dictionary
+	 * 
+	 * @param scene The scene for the GUI
+	 * @param vBox The vBox that includes the menu bar
+	 */
 	
 	public void remove(Scene scene, VBox vBox)
 	{	
@@ -504,8 +531,7 @@ public class GUI extends Application
 			   catch(Exception e2)
 			   {
 				   message.setText("No dictionary chosen");
-			   }
-			   
+			   } 
 		   } 
 		 };   
 		 button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
@@ -513,10 +539,10 @@ public class GUI extends Application
 	}
 	
 	/**
+	 * method to handle the user input for loading a dictionary from file
 	 * 
-	 * @param scene
-	 * @param vBox
-	 * @param primaryStage
+	 * @param scene The scene for the GUI
+	 * @param vBox The vBox that includes the menu bar
 	 */
 	
 	public void loadDic(Scene scene, VBox vBox)
@@ -582,22 +608,18 @@ public class GUI extends Application
 		   } 
 		 };   
 		 button2.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-	    
-	    
 	}
 	
 	/**
+	 * method to handle the user input for displaying the contents of a dictionary
 	 * 
-	 * @param scene
-	 * @param vBox
-	 * @param primaryStage
+	 * @param scene The scene for the GUI
+	 * @param vBox The vBox that includes the menu bar
 	 */
 	
 	public void displayDic(Scene scene, VBox vBox)
 	{
 		GridPane grid = new GridPane();
-		 
-		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(15);
 		grid.setVgap(20);
 		grid.setPadding(new Insets(100, 100, 350, 350));
@@ -635,6 +657,7 @@ public class GUI extends Application
 	    displayDic.getChildren().add(vBox);
 	    scene.setRoot(displayDic); 
 	    
+	    //runs when "Display" button is selected
 	    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		 { 
 		   @Override 
@@ -656,12 +679,16 @@ public class GUI extends Application
 	    
 	}
 	
+	/**
+	 * method to handle the user input for saving the dictionaries to file
+	 * 
+	 * @param scene The scene for the GUI
+	 * @param vBox The vBox that includes the menu bar
+	 */
+	
 	public void saveDic(Scene scene, VBox vBox)
 	{
-		 GridPane grid = new GridPane();
-		 
-		 grid.setAlignment(Pos.CENTER);
-		 
+		 GridPane grid = new GridPane();		 
 		 grid.setHgap(50);
 		 grid.setVgap(40);
 		 grid.setPadding(new Insets(150, 100, 330, 330));
@@ -688,6 +715,7 @@ public class GUI extends Application
 	    saveDic.getChildren().add(vBox);
 	    scene.setRoot(saveDic); 
 	    
+	    //runs when "Save" button is selected
 	    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		 { 
 		   @Override 
