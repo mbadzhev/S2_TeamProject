@@ -95,7 +95,7 @@ public class Dictionary {
 	 *
 	 * @param filename the file where the dictionary is store in.
 	 * @param map      the HashMap to store the dictionary to.
-	 * @throws IOException
+	 * @throws IOException 
 	 */
 	public void loadDictionary(String direction) throws Exception {
 		// Will throw exception if FileReader can't load it or already loaded
