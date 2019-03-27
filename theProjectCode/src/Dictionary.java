@@ -62,26 +62,26 @@ public class Dictionary {
 		partsMap.put(direction, new HashMap<String, String>());
 		directions.add(direction);
 		dictionaryPaths.put(direction, direction + ".txt");
-		try {
-			File file = new File(direction + ".txt");
-			file.createNewFile();
-		} catch (Exception e) {
-			// Already exists, no worries
+		File file = new File(direction + ".txt");
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+			}
 		}
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File(direction + ".txt")));
+			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line;
 			while (reader.ready()) {
 				line = reader.readLine();
 				String[] mappings = line.split(" ");
-				addToDictionary(mappings[0], mappings[1], direction);
+				partsMap.get(direction).put(mappings[0], mappings[1]);
 			}
 			reader.close();
 		} catch (Exception e) {
 		}
 		try {
-			writers.put(direction,
-					new PrintWriter(new FileOutputStream(new File(dictionaryPaths.get(direction)), true)));
+			writers.put(direction,new PrintWriter(new FileOutputStream(dictionaryPaths.get(direction), true)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -104,8 +104,6 @@ public class Dictionary {
 		} else {
 			throw new Exception();
 		}
-		// TODO check if the format of the dictionary is right
-		// TODO support UTF-8 / Umlaut
 	}
 
 	/**
