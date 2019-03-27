@@ -33,7 +33,7 @@ public class Dictionary {
 	 * (so it does not have to open every single time)
 	 */
 	public Dictionary() {
-		supportedDirections=new ArrayList<String>();
+		supportedDirections = new ArrayList<String>();
 		supportedDirections.add("en-de");
 		supportedDirections.add("de-en");
 		supportedDirections.add("fr-en");
@@ -81,7 +81,7 @@ public class Dictionary {
 		} catch (Exception e) {
 		}
 		try {
-			writers.put(direction,new PrintWriter(new FileOutputStream(dictionaryPaths.get(direction), true)));
+			writers.put(direction, new PrintWriter(new FileOutputStream(dictionaryPaths.get(direction), true)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -89,8 +89,7 @@ public class Dictionary {
 
 	/**
 	 * Given a filename, this function parses a dictionary from that file to HashMap
-	 * of direction.
-	 *  If it already exists or it can't load it for whatever reason it
+	 * of direction. If it already exists or it can't load it for whatever reason it
 	 * throws an Exception
 	 *
 	 * @param filename the file where the dictionary is store in.
@@ -115,10 +114,11 @@ public class Dictionary {
 	public void saveDictionary() {
 		for (String direction : directions) {
 			try {
-				PrintWriter rewriter = new PrintWriter(new FileOutputStream(new File(dictionaryPaths.get(direction)), false));
+				PrintWriter rewriter = new PrintWriter(
+						new FileOutputStream(new File(dictionaryPaths.get(direction)), false));
 				for (Map.Entry<String, String> keyValuePair : partsMap.get(direction).entrySet()) {
 					rewriter.println(keyValuePair.getKey() + " " + keyValuePair.getValue());
-					System.out.println(keyValuePair.getKey());
+//					System.out.println(keyValuePair.getKey());
 				}
 				rewriter.flush();
 			} catch (FileNotFoundException e) {
@@ -247,7 +247,7 @@ public class Dictionary {
 	 */
 	public void addToDictionary(String key, String value, String direction) {
 		partsMap.get(direction).put(key, value);
-		writers.get(direction).println(key+" "+value);
+		writers.get(direction).println(key + " " + value);
 	}
 
 	/**
@@ -258,9 +258,9 @@ public class Dictionary {
 	 */
 	public String detectLanguage(String word) {
 		String ret = "not found";
-		for (String direction:directions) {
+		for (String direction : directions) {
 			if (partsMap.get(direction).containsKey(word)) {
-				return direction.substring(0,direction.lastIndexOf("-"));
+				return direction.substring(0, direction.lastIndexOf("-"));
 			}
 		}
 		return ret;
@@ -296,15 +296,19 @@ public class Dictionary {
 	public void toggleAutomaticAdding() {
 		automaticAdding = !automaticAdding;
 	}
+
 	/**
 	 * Returns all loaded dictionaries
+	 * 
 	 * @return
 	 */
 	public ArrayList<String> getLoadedDictionaries() {
 		return new ArrayList<String>(directions);
 	}
+
 	/**
 	 * Returns all supported dictionaries (even if not currently loaded)
+	 * 
 	 * @return
 	 */
 	public ArrayList<String> getSupportedDirections() {

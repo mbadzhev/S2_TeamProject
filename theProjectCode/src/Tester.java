@@ -288,8 +288,12 @@ public class Tester {
 		System.out.println("<<<<< TEST SETTING AUTOMATIC ADDING");
 
 		// TODO empty the dictionary
+		translator.removeFromDictionary("my", "en-de");
+		translator.removeFromDictionary("mother", "en-de");
+		translator.removeFromDictionary("likes", "en-de");
+		translator.removeFromDictionary("cooking", "en-de");
 
-		System.out.println("Set automaticAdding to true, empty the en-de dictionary and translate ");
+		System.out.println("Set automaticAdding to true, remove words that are going to be removed and translate ");
 		// set automticAdding to true
 		if (!translator.getAutomaticAdding()) {
 			translator.toggleAutomaticAdding();
@@ -299,8 +303,14 @@ public class Tester {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		
+		translator.removeFromDictionary("my", "en-de");
+		translator.removeFromDictionary("meinem", "en-de");
+		translator.removeFromDictionary("mother", "en-de");
+		translator.removeFromDictionary("likes", "en-de");
+		translator.removeFromDictionary("cooking", "en-de");
 
-		System.out.println("Set automaticAdding to false, empty the en-de dictionary and translate ");
+		System.out.println("Set automaticAdding to false,  remove words that are going to be removed and translate and translate ");
 		// set automticAdding to false
 		if (translator.getAutomaticAdding()) {
 			translator.toggleAutomaticAdding();
@@ -319,6 +329,32 @@ public class Tester {
 	public void testLoadSave() {
 		System.out.println();
 		System.out.println("<<<<< TEST LOAD AND SAVE DICTIONARIES ");
+
+		System.out.println();
+		System.out.println("display all dic");
+		System.out.println(translator.getLoadedDictionaries());
+
+		System.out.println();
+		System.out.println("load a dictionary:");
+		try {
+			translator.loadDictionary("en-fr");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		System.out.println(translator.getLoadedDictionaries());
+
+		System.out.println();
+		System.out.println("Load an already loaded dictionary:");
+		try {
+			translator.loadDictionary("en-de");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		System.out.println(translator.getLoadedDictionaries());
+
+		System.out.println();
+		translator.saveDictionaryToFile();
+		System.out.println("dictionaries saved to file");
 
 		System.out.println("END TEST LOAD AND SAVE DICTIONARIES >>>>>");
 		// TODO implement test plan
