@@ -24,3 +24,5 @@ catholic catholique
 garden jardin
 daffodils jonquilles
 chocolate chocolat
+translate>traduire
+this>cette
