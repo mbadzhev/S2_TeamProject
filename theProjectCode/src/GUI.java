@@ -151,6 +151,7 @@ public class GUI extends Application
 		
 		    Group transl = new Group(grid);
 		    Scene scene = new Scene(transl, 1200, 600);
+		    scene.setFill(Color.LIGHTSTEELBLUE);
 		    VBox vBox = new VBox(menuBar);	
 		    
 		    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
@@ -183,9 +184,7 @@ public class GUI extends Application
 		    	{
 		    		transl.getChildren().add(vBox);
 			    	scene.setRoot(transl);
-		    	}
-		    	System.out.println(translator.getLoadedDictionaries());
-		    	
+		    	} 	
 		    });
 		    menuItem.setOnAction(e -> 
 		    {
@@ -661,7 +660,6 @@ public class GUI extends Application
 	{
 		 GridPane grid = new GridPane();
 		 
-		 grid.setGridLinesVisible(true);
 		 grid.setAlignment(Pos.CENTER);
 		 
 		 grid.setHgap(50);
@@ -703,9 +701,7 @@ public class GUI extends Application
 			   }
 			   catch(Exception e5)
 			   {
-				  
-				   //
-				   
+				   message.setText("Dictionary couldn't be saved");
 			   }
 		   } 
 		 };   
