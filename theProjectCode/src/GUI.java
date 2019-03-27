@@ -1,7 +1,9 @@
+import java.awt.Desktop;
 import java.awt.Event;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.stream.DoubleStream;
 
 import javafx.application.Application;
@@ -125,7 +127,6 @@ public class GUI extends Application
 		    Label label = new Label("Please enter the direction:");
 		    label.setFont(Font.font(20));
 		    ComboBox<String> comboBox = new ComboBox<>();
-		    //Not working
 			comboBox.getItems().addAll(translator.getLoadedDictionaries());
 		  
 		    Button button1 = new Button("Translate");
@@ -146,7 +147,7 @@ public class GUI extends Application
 		    Text message = new Text();
 			message.setFill(Color.FIREBRICK);
 			message.setFont(Font.font(20));
-			grid.add(message, 1, 3);
+			grid.add(message, 0, 5);
 		
 		    Group transl = new Group(grid);
 		    Scene scene = new Scene(transl, 1200, 600);
@@ -160,6 +161,8 @@ public class GUI extends Application
 					try
 					{								
 						translatedText.setText(translator.translate(toTransl.getText(), comboBox.getValue()));
+						
+						message.setText("");
 					}
 					catch(Exception e0)
 					{
@@ -169,15 +172,19 @@ public class GUI extends Application
 			};   
 			button1.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 		    
-		    
-		  
 		    menuItem0.setOnAction(e ->
 		    {
+		    	//update comboBox with newly loaded dictionaries
+		    	ComboBox<String> comboBox2 = new ComboBox<>();
+		    	comboBox2.getItems().addAll(translator.getLoadedDictionaries());
+		    	grid.add(comboBox2, 0, 4);
+		    	
 		    	if(!transl.getChildren().contains(vBox)) 
 		    	{
 		    		transl.getChildren().add(vBox);
 			    	scene.setRoot(transl);
 		    	}
+		    	System.out.println(translator.getLoadedDictionaries());
 		    	
 		    });
 		    menuItem.setOnAction(e -> 
@@ -197,12 +204,12 @@ public class GUI extends Application
     
 		    menuItem3.setOnAction(e -> 
 		    {
-		    	loadDic(scene, vBox, primaryStage);
+		    	loadDic(scene, vBox);
 		    });
 		    
 		    menuItem4.setOnAction(e -> 
 		    {
-		    	displayDic(scene, vBox, primaryStage);
+		    	displayDic(scene, vBox);
 		    });
 		    
 		    menuItem5.setOnAction(e -> 
@@ -236,7 +243,7 @@ public class GUI extends Application
 		GridPane grid = new GridPane();
 		
 		grid.setHgap(15);
-		grid.setVgap(40);
+		grid.setVgap(30);
 		grid.setPadding(new Insets(150, 100, 300, 300));
 		grid.setMinSize(500, 500); 
 		    
@@ -267,7 +274,7 @@ public class GUI extends Application
 		HBox box = new HBox(10);
 		box.setAlignment(Pos.BOTTOM_RIGHT);
 		box.getChildren().add(button1);
-
+		
 		grid.add(title, 0, 0);
 		grid.add(fileLabel, 0, 1);
 		grid.add(fileName, 1, 1);
@@ -282,7 +289,7 @@ public class GUI extends Application
 		Text message = new Text();
 		message.setFill(Color.FIREBRICK);
 		message.setFont(Font.font(20));
-		grid.add(message, 0, 4);
+		grid.add(message, 0, 4, 2, 1);
 		 
 		Group transFile = new Group(grid);
 		transFile.getChildren().add(vBox);
@@ -299,7 +306,7 @@ public class GUI extends Application
 			  
 			    if (file != null) 
 			    { 
-			    	 fileName.setText(file.getName());
+			    	 fileName.setText(file.getAbsolutePath());
 			    }     
 			} 
 		}; 
@@ -312,14 +319,42 @@ public class GUI extends Application
 		   public void handle(MouseEvent event) 
 		   { 			   
 			   try
-			   {			   				   
-				   translator.translateFile(fileName.getText(), trFileName.getText(), comboBox.getValue());
-				   message.setText("File has been translated");
+			   {	
+				   double time = 0.0;
 				   
+				   time = translator.translateFile(fileName.getText(), trFileName.getText(), comboBox.getValue());
+				   time = Double.parseDouble(new DecimalFormat("##.##").format(time));
+				   
+				   message.setText("Time for translation in words per second: " + time);
+				   message.setFill(Color.GREEN);
+				   
+				   Button button2 = new Button("Open translation");
+				   HBox box2 = new HBox(10);
+				   //box2.setAlignment(Pos.BOTTOM_RIGHT);
+				   box2.getChildren().add(button2);
+				   grid.add(box2, 0, 5);
+				   
+				   EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
+				   { 
+					   @Override 
+					   public void handle(MouseEvent event) 
+					   { 
+						   Desktop desktop = Desktop.getDesktop();
+						   try 
+						   {
+							   desktop.open(new File(trFileName.getText()));
+						   } 
+						   catch (IOException e) 
+						   {
+							   e.printStackTrace();
+						   }
+					   } 
+					 };   
+					 button2.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 			   }
 			   catch(FileNotFoundException | DirectionException | NullPointerException e)
 			   {
-				   message.setText("Please fill out all the fields correctly");
+				   message.setText("Please fill in all the fields correctly");
 			   }
 		   } 
 		 };   
@@ -382,14 +417,21 @@ public class GUI extends Application
 		    public void handle(MouseEvent e) 
 		    { 
 				try
-				{					
-					translator.addToDictionary(toTransl.getText(), translatedText.getText(), comboBox.getValue());
-					
-					message.setText("Added to dictionary");
+				{		
+					if(toTransl.getText().equals("") || translatedText.getText().equals(""))
+					{
+						message.setText("Please fill out all fields");
+					}
+					else
+					{
+						translator.addToDictionary(toTransl.getText(), translatedText.getText(), comboBox.getValue());
+						
+						message.setText("Added to dictionary");
+					}
 				}
 				catch(Exception e1)
 				{
-					message.setText("Please fill out all the fields correctly");
+					message.setText("Please choose a dictionary");
 				}
 		    } 
 		};   
@@ -449,12 +491,20 @@ public class GUI extends Application
 		   { 
 			   try
 			   {	
-				   translator.removeFromDictionary(toDelete.getText(), comboBox.getValue());
-				   message.setText("Word removed from dictionary");
+				   if(toDelete.getText().equals(""))
+				   {
+					   message.setText("Please enter a word");
+				   }
+				   else
+				   {
+					   translator.removeFromDictionary(toDelete.getText(), comboBox.getValue());
+					   
+					   message.setText("Word removed from dictionary");
+				   } 
 			   }
 			   catch(Exception e2)
 			   {
-				   message.setText("Error");
+				   message.setText("No dictionary chosen");
 			   }
 			   
 		   } 
@@ -470,7 +520,7 @@ public class GUI extends Application
 	 * @param primaryStage
 	 */
 	
-	public void loadDic(Scene scene, VBox vBox, Stage primaryStage)
+	public void loadDic(Scene scene, VBox vBox)
 	{
 		GridPane grid = new GridPane();
 		 
@@ -521,7 +571,14 @@ public class GUI extends Application
 			   }
 			   catch(Exception e3)
 			   {
-				   message.setText("No dictionary chosen");
+				   if(e3.getMessage() != null && e3.getMessage().equals("already loaded"))
+				   {
+					   message.setText("Dictionary already loaded");
+				   }
+				   else
+				   {
+					   message.setText("No dictionary chosen");
+				   }
 			   }  
 		   } 
 		 };   
@@ -537,7 +594,7 @@ public class GUI extends Application
 	 * @param primaryStage
 	 */
 	
-	public void displayDic(Scene scene, VBox vBox, Stage primaryStage)
+	public void displayDic(Scene scene, VBox vBox)
 	{
 		GridPane grid = new GridPane();
 		 
@@ -587,6 +644,8 @@ public class GUI extends Application
 			   try
 			   {					   
 				   dictionary.setText(translator.displayDictionary(comboBox.getValue()));
+				   
+				   message.setText("");
 			   }
 			   catch(NullPointerException e4)
 			   {
