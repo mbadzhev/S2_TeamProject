@@ -10,9 +10,19 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+/**
+ * this class handles translations and provides wrapper methods to handle the
+ * Dictionary class.
+ * 
+ * @author group 1
+ *
+ */
 public class Translator {
 	private Dictionary dictionary;
 
+	/**
+	 * creates an instance of Translator
+	 */
 	public Translator() {
 		dictionary = new Dictionary();
 	}
@@ -22,6 +32,7 @@ public class Translator {
 	 * 
 	 * @param filename            name of file to translate
 	 * @param translationFilename name of file to output translation
+	 * @param direction           the direction to translate the file
 	 * @throws FileNotFoundException thrown if the file couldn't be found
 	 * @throws DirectionException    thrown if there is a problem with the
 	 *                               direction. the getMessage() to get more
@@ -43,26 +54,13 @@ public class Translator {
 			while (reader.ready()) {
 				String line = reader.readLine();
 
-//				String[] words = line.split(" ");
-//				for (int i = 0; i < words.length; i++) {
-//					// check if word contains a special character
-//					String[] wordParts = words[i].split("[:\\\"(),]");
-//					
-//					writer.print(dictionary.translate(wordParts[0], direction));
-//					if (wordParts.length > 1) {
-//						writer.print(wordParts[1]);
-//					}
-//					writer.print(" ");
-
 				if (line.equals("")) {
 					continue;
 				}
-				String[] words=line.split(" ");
-				for (int i=0;i<words.length;i++) {
-					
-					// ([A-Za-zäüößÄÜÖ])*([(),;\-"])
-					
-					writer.print(dictionary.translate(words[i], direction)+" ");
+				String[] words = line.split(" ");
+				for (int i = 0; i < words.length; i++) {
+
+					writer.print(dictionary.translate(words[i], direction) + " ");
 
 					wordCount++;
 				}
@@ -76,24 +74,20 @@ public class Translator {
 		double elapsedTime = (System.nanoTime() - startTime) * 0.000000001;
 		return wordCount / elapsedTime;
 	}
-	
 
 	/**
 	 * loads a dictionary from a file. If the file doesn't exists, a new file will
 	 * be created.
 	 * 
 	 * @param direction the direction of the dictionary in the file
-	 * @throws IOException
+	 * @throws IOException exceptions passed from the Dictionary class
 	 */
 	public void loadDictionary(String direction) throws IOException, Exception {
 		dictionary.loadDictionary(direction);
-		// TODO method to check if direction is valid.
 	}
 
 	/**
-	 * Saves given direction to .txt
-	 * 
-	 * @direction
+	 * Saves all dictionaries to a files
 	 * 
 	 */
 	public void saveDictionaryToFile() {
@@ -152,10 +146,18 @@ public class Translator {
 		return dictionary.detectLanguage(text);
 	}
 
+	/**
+	 * get the status of the field automaticAdding.
+	 * 
+	 * @return the status of the field automaticAdding.
+	 */
 	public boolean getAutomaticAdding() {
 		return dictionary.getAutomaticAdding();
 	}
 
+	/**
+	 * toggles the state of automaticAdding
+	 */
 	public void toggleAutomaticAdding() {
 		dictionary.toggleAutomaticAdding();
 	}
@@ -163,9 +165,9 @@ public class Translator {
 	/**
 	 * adds key-value to dictionary
 	 * 
-	 * @param key
-	 * @param value
-	 * @param toEnglishToGerman
+	 * @param key       the key to add to the dictionary
+	 * @param value     the translation of the key
+	 * @param direction the dictionary to add the translation to
 	 */
 	public void addToDictionary(String key, String value, String direction) {
 		dictionary.addToDictionary(key, value, direction);
@@ -174,7 +176,7 @@ public class Translator {
 	/**
 	 * Returns all loaded dictionaries
 	 * 
-	 * @return
+	 * @return all currently loaded dictionaries
 	 */
 	public ArrayList<String> getLoadedDictionaries() {
 		return dictionary.getLoadedDictionaries();
@@ -183,7 +185,7 @@ public class Translator {
 	/**
 	 * Returns all supported dictionaries (even if not currently loaded)
 	 * 
-	 * @return
+	 * @return all supported dictionaries
 	 */
 	public ArrayList<String> getSupportedDirections() {
 		return dictionary.getSupportedDirections();
