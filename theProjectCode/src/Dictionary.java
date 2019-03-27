@@ -75,7 +75,7 @@ public class Dictionary {
 			String line;
 			while (reader.ready()) {
 				line = reader.readLine();
-				String[] mappings = line.split(" ");
+				String[] mappings = line.split(">");
 				partsMap.get(direction).put(mappings[0], mappings[1]);
 			}
 			reader.close();
@@ -118,7 +118,7 @@ public class Dictionary {
 				PrintWriter rewriter = new PrintWriter(
 						new FileOutputStream(new File(dictionaryPaths.get(direction)), false));
 				for (Map.Entry<String, String> keyValuePair : partsMap.get(direction).entrySet()) {
-					rewriter.println(keyValuePair.getKey() + " " + keyValuePair.getValue());
+					rewriter.println(keyValuePair.getKey() + ">" + keyValuePair.getValue());
 				}
 				rewriter.flush();
 			} catch (FileNotFoundException e) {
@@ -165,10 +165,10 @@ public class Dictionary {
 	 */
 	private void saveWord(String word, String translation, String direction) {
 		try {
-			writers.get(direction).println(word + " " + translation);
+			writers.get(direction).println(word + ">" + translation);
 			writers.get(direction).flush();
 			partsMap.get(direction).put(word, translation);
-			writers.get(getInverseDirection(direction)).println(translation + " " + word);
+			writers.get(getInverseDirection(direction)).println(translation + ">" + word);
 			writers.get(getInverseDirection(direction)).flush();
 			partsMap.get(getInverseDirection(direction)).put(translation, word);
 		} catch (Exception e) {
@@ -236,7 +236,7 @@ public class Dictionary {
 	 */
 	public void addToDictionary(String key, String value, String direction) {
 		partsMap.get(direction).put(key, value);
-		writers.get(direction).println(key + " " + value);
+		writers.get(direction).println(key + ">" + value);
 	}
 
 	/**
