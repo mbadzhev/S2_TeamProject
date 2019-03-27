@@ -30,7 +30,7 @@ public class Translator {
 	 */
 	public double translateFile(String filename, String translationFilename, String direction)
 			throws DirectionException, FileNotFoundException {
-		
+
 		long startTime = System.nanoTime();
 		int wordCount = 0;
 		// check if the direction is loaded in the dictionary
@@ -42,12 +42,28 @@ public class Translator {
 		try {
 			while (reader.ready()) {
 				String line = reader.readLine();
+
+//				String[] words = line.split(" ");
+//				for (int i = 0; i < words.length; i++) {
+//					// check if word contains a special character
+//					String[] wordParts = words[i].split("[:\\\"(),]");
+//					
+//					writer.print(dictionary.translate(wordParts[0], direction));
+//					if (wordParts.length > 1) {
+//						writer.print(wordParts[1]);
+//					}
+//					writer.print(" ");
+
 				if (line.equals("")) {
 					continue;
 				}
 				String[] words=line.split(" ");
 				for (int i=0;i<words.length;i++) {
+					
+					// ([A-Za-zäüößÄÜÖ])*([(),;\-"])
+					
 					writer.print(dictionary.translate(words[i], direction)+" ");
+
 					wordCount++;
 				}
 				writer.println();
@@ -59,12 +75,12 @@ public class Translator {
 		}
 		double elapsedTime = (System.nanoTime() - startTime) * 0.000000001;
 		return wordCount / elapsedTime;
-
 	}
-
+	
 
 	/**
-	 * loads a dictionary from a file. If the file doesn't exists, a new file will be created.
+	 * loads a dictionary from a file. If the file doesn't exists, a new file will
+	 * be created.
 	 * 
 	 * @param direction the direction of the dictionary in the file
 	 * @throws IOException
@@ -94,14 +110,14 @@ public class Translator {
 	 * @throws Exception unable to translate (probably wrong direction)
 	 */
 	public String translate(String input, String direction) throws Exception {
-		String[] lines=input.split("\n");
-		String trans="";
-		for (int j=0;j<lines.length;j++) {
-			String[] words=lines[j].split(" ");
-			for (int i=0;i<words.length;i++) {
-				trans=trans.concat(dictionary.translate(words[i], direction)+" ");
+		String[] lines = input.split("\n");
+		String trans = "";
+		for (int j = 0; j < lines.length; j++) {
+			String[] words = lines[j].split(" ");
+			for (int i = 0; i < words.length; i++) {
+				trans = trans.concat(dictionary.translate(words[i], direction) + " ");
 			}
-			trans=trans.concat("\n");
+			trans = trans.concat("\n");
 		}
 		return trans;
 	}
@@ -139,9 +155,11 @@ public class Translator {
 	public boolean getAutomaticAdding() {
 		return dictionary.getAutomaticAdding();
 	}
+
 	public void toggleAutomaticAdding() {
 		dictionary.toggleAutomaticAdding();
 	}
+
 	/**
 	 * adds key-value to dictionary
 	 * 
@@ -150,17 +168,21 @@ public class Translator {
 	 * @param toEnglishToGerman
 	 */
 	public void addToDictionary(String key, String value, String direction) {
-		dictionary.addToDictionary(key,value,direction);
+		dictionary.addToDictionary(key, value, direction);
 	}
+
 	/**
 	 * Returns all loaded dictionaries
+	 * 
 	 * @return
 	 */
 	public ArrayList<String> getLoadedDictionaries() {
 		return dictionary.getLoadedDictionaries();
 	}
+
 	/**
 	 * Returns all supported dictionaries (even if not currently loaded)
+	 * 
 	 * @return
 	 */
 	public ArrayList<String> getSupportedDirections() {
