@@ -1,0 +1,11 @@
+like>mag
+Chocolate>Schokolade
+with>mit
+all>ganz
+a lot of>viel
+Porridge>Brei
+likes>mag
+chocolate>Schokolade
+a>ein
+lot>viel
+of>der
