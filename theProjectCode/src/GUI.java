@@ -165,7 +165,9 @@ public class GUI extends Application
 		    Group transl = new Group(grid);
 		    Scene scene = new Scene(transl, 1200, 600);
 		    scene.setFill(Color.LIGHTSTEELBLUE);
-		    VBox vBox = new VBox(menuBar);	
+		    VBox vBox = new VBox(menuBar);
+		    
+		    message.setText("");
 		    
 		    //clicking on "Translate" button
 		    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
@@ -182,15 +184,16 @@ public class GUI extends Application
 							@Override
 							public void run() {
 
-								try {
+								try 
+								{
 									translatedText.setText(translator.translate(toTransl.getText(), comboBoxTransl.getValue()));
 									message.setText("Bam. Translated.");
-								} catch (Exception e) {
+								} 
+								catch (Exception e) 
+								{
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								
-								message.setText("");
 							}
 							
 						}).start();
@@ -522,7 +525,7 @@ public class GUI extends Application
 		grid.add(langOption, 0, 2);
 		grid.add(comboBox, 1, 2);
 		grid.add(box, 1, 3);
-		grid.add(message, 0, 3);
+		grid.add(message, 0, 3, 2, 1);
 		 
 	    Group remove = new Group(grid);
 	    remove.getChildren().add(vBox);
