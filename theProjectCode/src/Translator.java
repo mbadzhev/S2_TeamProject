@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -6,6 +7,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Translator {
 	private Dictionary dictionary;
@@ -39,6 +42,9 @@ public class Translator {
 		try {
 			while (reader.ready()) {
 				String line = reader.readLine();
+				if (line.equals("")) {
+					continue;
+				}
 				String[] words=line.split(" ");
 				for (int i=0;i<words.length;i++) {
 					writer.print(dictionary.translate(words[i], direction)+" ");
