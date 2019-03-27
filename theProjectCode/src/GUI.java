@@ -125,11 +125,6 @@ public class GUI extends Application
 		    Label label = new Label("Please enter the direction:");
 		    label.setFont(Font.font(20));
 		    ComboBox<String> comboBox = new ComboBox<>();
-		    
-		    
-		    
-		    
-		    
 		    //Not working
 			comboBox.getItems().addAll(translator.getLoadedDictionaries());
 		  

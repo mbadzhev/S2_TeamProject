@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -6,6 +7,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Translator {
 	private Dictionary dictionary;
@@ -39,16 +42,28 @@ public class Translator {
 		try {
 			while (reader.ready()) {
 				String line = reader.readLine();
-				String[] words = line.split(" ");
-				for (int i = 0; i < words.length; i++) {
-					// check if word contains a special character
-					String[] wordParts = words[i].split("[:\\\"(),]");
+
+//				String[] words = line.split(" ");
+//				for (int i = 0; i < words.length; i++) {
+//					// check if word contains a special character
+//					String[] wordParts = words[i].split("[:\\\"(),]");
+//					
+//					writer.print(dictionary.translate(wordParts[0], direction));
+//					if (wordParts.length > 1) {
+//						writer.print(wordParts[1]);
+//					}
+//					writer.print(" ");
+
+				if (line.equals("")) {
+					continue;
+				}
+				String[] words=line.split(" ");
+				for (int i=0;i<words.length;i++) {
 					
-					writer.print(dictionary.translate(wordParts[0], direction));
-					if (wordParts.length > 1) {
-						writer.print(wordParts[1]);
-					}
-					writer.print(" ");
+					// ([A-Za-zäüößÄÜÖ])*([(),;\-"])
+					
+					writer.print(dictionary.translate(words[i], direction)+" ");
+
 					wordCount++;
 				}
 				writer.println();
@@ -60,8 +75,8 @@ public class Translator {
 		}
 		double elapsedTime = (System.nanoTime() - startTime) * 0.000000001;
 		return wordCount / elapsedTime;
-
 	}
+	
 
 	/**
 	 * loads a dictionary from a file. If the file doesn't exists, a new file will

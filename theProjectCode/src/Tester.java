@@ -1,3 +1,5 @@
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 
@@ -5,13 +7,14 @@ public class Tester {
 	Translator translator;
 
 	public static void main(String[] args) {
-
+		
 		Tester tester = new Tester();
 		tester.runTestMenu();
 
 	}
 
 	public Tester() {
+		
 		translator = new Translator();
 	}
 
@@ -118,16 +121,30 @@ public class Tester {
 			System.out.println(e.getMessage());
 		}
 
-		System.out.println("Translate a word that doesn’t exist in one language: ");
+		System.out.println("Translate a word that doesnâ€™t exist in one language: ");
 		try {
 			System.out.println(translator.translate("seseseseiii", "de-en"));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 
-		System.out.println("Translate a word and a special character (e.g. ;,:”/’): ");
+		System.out.println("Translate a word and a special character (e.g. ;,:â€�/â€™): ");
 		try {
 			System.out.println(translator.translate("say:", "en-de"));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("translate an umlaut: ");
+		try {
+			System.out.println(translator.translate("Mütter", "de-en"));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("translate an umlaut: ");
+		try {
+			System.out.println(translator.translate("mothers", "en-de"));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -179,7 +196,7 @@ public class Tester {
 		System.out.println("Translate a file de-en (Rotkappchen): ");
 		try {
 			System.out.println(
-					"words per second: " + translator.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en")
+					"words per second: " + translator.translateFile("Rotkäppchen.txt","Rotkäppchen_en.txt", "de-en")
 							+ ", translation done");
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());

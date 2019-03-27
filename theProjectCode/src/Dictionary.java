@@ -70,7 +70,8 @@ public class Dictionary {
 			}
 		}
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
+//			BufferedReader reader = new BufferedReader(new FileReader(file));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "ISO-8859-1"));
 			String line;
 			while (reader.ready()) {
 				line = reader.readLine();
@@ -102,7 +103,7 @@ public class Dictionary {
 			initialiseDirection(direction);
 			initialiseDirection(getInverseDirection(direction));
 		} else {
-			throw new Exception();
+			throw new Exception("already loaded");
 		}
 	}
 
@@ -118,7 +119,6 @@ public class Dictionary {
 						new FileOutputStream(new File(dictionaryPaths.get(direction)), false));
 				for (Map.Entry<String, String> keyValuePair : partsMap.get(direction).entrySet()) {
 					rewriter.println(keyValuePair.getKey() + " " + keyValuePair.getValue());
-//					System.out.println(keyValuePair.getKey());
 				}
 				rewriter.flush();
 			} catch (FileNotFoundException e) {
@@ -135,37 +135,26 @@ public class Dictionary {
 	 * @return translation
 	 */
 	public String translate(String word, String direction) {
-		if (partsMap.get(direction).containsKey(word)) {
-			return partsMap.get(direction).get(word);
-		}
-		if (word.equals("")) {
-			return word;
-		}
-		if (automaticAdding) {
-			try {
-				URL url = new URL(HOST + "key=" + KEY + "&text=" + word + "&lang=" + direction);
-				InputStream is = url.openStream();
-				Scanner s = new Scanner(is);
-				String translation = parseJSONTranslation(s.nextLine());
-				if (!word.equals(translation)) {
-					saveWord(word, translation, direction);
+		String ret = partsMap.get(direction).get(word);
+		if (ret == null) {
+			if (automaticAdding) {
+				try {
+					URL url = new URL(HOST + "key=" + KEY + "&text=" + word + "&lang=" + direction);
+					InputStream is = url.openStream();
+					Scanner s = new Scanner(is);
+					String translation = parseJSONTranslation(s.nextLine());
+					if (!word.equals(translation)) {
+						saveWord(word, translation, direction);
+					}
+					return translation;
+				} catch (Exception e) {
 				}
-				return translation;
-			} catch (Exception e) {
 			}
+			System.out.println("happening");
+			ret = "";
 		}
-		return "";
+		return ret;
 	}
-//
-//	/**
-//	 * checks if a dictionary is loaded.
-//	 * 
-//	 * @param direction the direction of the dictionary
-//	 * @return true if the dictionary is loaded.
-//	 */
-//	public boolean dictionaryLoaded(String direction) {
-//		return partsMap.containsKey(direction);
-//	}
 
 	/**
 	 * Saves words not already in the dictionary. The words will be added to the
@@ -282,6 +271,9 @@ public class Dictionary {
 	 * @return a dictionary as a String
 	 */
 	public String displayDictionary(String direction) {
+		if (!partsMap.containsKey(direction)) {
+			return "";
+		}
 		String output = "";
 		for (Map.Entry<String, String> keyValuePair : partsMap.get(direction).entrySet()) {
 			output += keyValuePair.getKey() + " <> " + keyValuePair.getValue() + "\r\n";
