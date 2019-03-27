@@ -25,6 +25,7 @@ public class Dictionary {
 	private HashMap<String, HashMap<String, String>> partsMap;
 	private HashMap<String, String> dictionaryPaths;
 	private ArrayList<String> directions;
+	private ArrayList<String> supportedDirections;
 	private boolean automaticAdding;
 
 	/**
@@ -32,6 +33,13 @@ public class Dictionary {
 	 * (so it does not have to open every single time)
 	 */
 	public Dictionary() {
+		supportedDirections=new ArrayList<String>();
+		supportedDirections.add("en-de");
+		supportedDirections.add("de-en");
+		supportedDirections.add("fr-en");
+		supportedDirections.add("en-fr");
+		supportedDirections.add("en-es");
+		supportedDirections.add("es-en");
 		automaticAdding = true;
 		writers = new HashMap<String, PrintWriter>();
 		partsMap = new HashMap<String, HashMap<String, String>>();
@@ -126,19 +134,13 @@ public class Dictionary {
 	 * @param word
 	 * @param toGerman toGerman or false toEnglish
 	 * @return translation
-	 * @throws DirectionException throws exception if direction is unknown
 	 */
-	public String translate(String word, String direction) throws DirectionException {
-
-//		if (partsMap.get(direction) == null) {
-//			throw new DirectionException("the direction " + direction + " does not exist");
-//		}
-		if (word.equals("")) {
-			return word;
-		}
-		//return partsMap.get(direction).get(word);
+	public String translate(String word, String direction) {
 		if (partsMap.get(direction).containsKey(word)) {
 			return partsMap.get(direction).get(word);
+		}
+		if (word.equals("")) {
+			return word;
 		}
 		if (automaticAdding) {
 			try {
@@ -151,21 +153,20 @@ public class Dictionary {
 				}
 				return translation;
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 		return "";
 	}
-
-	/**
-	 * checks if a dictionary is loaded.
-	 * 
-	 * @param direction the direction of the dictionary
-	 * @return true if the dictionary is loaded.
-	 */
-	public boolean dictionaryLoaded(String direction) {
-		return partsMap.containsKey(direction);
-	}
+//
+//	/**
+//	 * checks if a dictionary is loaded.
+//	 * 
+//	 * @param direction the direction of the dictionary
+//	 * @return true if the dictionary is loaded.
+//	 */
+//	public boolean dictionaryLoaded(String direction) {
+//		return partsMap.containsKey(direction);
+//	}
 
 	/**
 	 * Saves words not already in the dictionary. The words will be added to the
@@ -295,5 +296,19 @@ public class Dictionary {
 
 	public void toggleAutomaticAdding() {
 		automaticAdding = !automaticAdding;
+	}
+	/**
+	 * Returns all loaded dictionaries
+	 * @return
+	 */
+	public ArrayList<String> getLoadedDictionaries() {
+		return new ArrayList<String>(directions);
+	}
+	/**
+	 * Returns all supported dictionaries (even if not currently loaded)
+	 * @return
+	 */
+	public ArrayList<String> getSupportedDirections() {
+		return new ArrayList<String>(supportedDirections);
 	}
 }

@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class Translator {
 	private Dictionary dictionary;
@@ -29,7 +30,7 @@ public class Translator {
 		long startTime = System.nanoTime();
 		int wordCount = 0;
 		// check if the direction is loaded in the dictionary
-		if (!dictionary.dictionaryLoaded(direction)) {
+		if (!dictionary.getLoadedDictionaries().contains(direction)) {
 			throw new DirectionException("the direction " + direction + " does not exist");
 		}
 		BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -42,7 +43,6 @@ public class Translator {
 					writer.print(dictionary.translate(words[i], "de-en")+" ");
 					wordCount++;
 				}
-				writer.println();
 				writer.println();
 			}
 			writer.close();
@@ -144,5 +144,19 @@ public class Translator {
 	 */
 	public void addToDictionary(String key, String value, String direction) {
 		dictionary.addToDictionary(key,value,direction);
+	}
+	/**
+	 * Returns all loaded dictionaries
+	 * @return
+	 */
+	public ArrayList<String> getLoadedDictionaries() {
+		return dictionary.getLoadedDictionaries();
+	}
+	/**
+	 * Returns all supported dictionaries (even if not currently loaded)
+	 * @return
+	 */
+	public ArrayList<String> getSupportedDirections() {
+		return dictionary.getSupportedDirections();
 	}
 }
