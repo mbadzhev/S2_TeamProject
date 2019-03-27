@@ -125,7 +125,8 @@ public class GUI extends Application
 		    Label label = new Label("Please enter the direction:");
 		    label.setFont(Font.font(20));
 		    ComboBox<String> comboBox = new ComboBox<>();
-			comboBox.getItems().addAll("English - German", "German - English");
+		    //Not working
+			comboBox.getItems().addAll(translator.getLoadedDictionaries());
 		  
 		    Button button1 = new Button("Translate");
 		    button1.setFont(Font.font(15));
@@ -155,21 +156,10 @@ public class GUI extends Application
 			{ 
 				@Override 
 			    public void handle(MouseEvent e) 
-			    {
-					String direction = "";
-					   
+			    {					   
 					try
-					{			   
-						if(comboBox.getValue().equals("English - German"))
-						{
-							   direction = "en-de";
-						}
-						else if (comboBox.getValue().equals("German - English"))
-						{
-							   direction = "de-en";
-						}
-						
-						translatedText.setText(translator.translate(toTransl.getText(), direction));
+					{								
+						translatedText.setText(translator.translate(toTransl.getText(), comboBox.getValue()));
 					}
 					catch(Exception e0)
 					{
@@ -247,7 +237,7 @@ public class GUI extends Application
 		
 		grid.setHgap(15);
 		grid.setVgap(40);
-		grid.setPadding(new Insets(100, 100, 300, 300));
+		grid.setPadding(new Insets(150, 100, 300, 300));
 		grid.setMinSize(500, 500); 
 		    
 		Text title = new Text("Translate from file");
@@ -270,11 +260,10 @@ public class GUI extends Application
 		langOption.setFont(Font.font(20));
 		
 		ComboBox<String> comboBox = new ComboBox<>();
-		comboBox.getItems().addAll("English - German", "German - English");
-		 
+		comboBox.getItems().addAll(translator.getLoadedDictionaries());
+		
 		Button button1 = new Button("Translate"); 
 		button1.setFont(Font.font(15));
-		//
 		HBox box = new HBox(10);
 		box.setAlignment(Pos.BOTTOM_RIGHT);
 		box.getChildren().add(button1);
@@ -293,7 +282,7 @@ public class GUI extends Application
 		Text message = new Text();
 		message.setFill(Color.FIREBRICK);
 		message.setFont(Font.font(20));
-		grid.add(message, 1, 5, 3, 1);
+		grid.add(message, 0, 4);
 		 
 		Group transFile = new Group(grid);
 		transFile.getChildren().add(vBox);
@@ -321,24 +310,11 @@ public class GUI extends Application
 		 { 
 		   @Override 
 		   public void handle(MouseEvent event) 
-		   { 
-			   String direction = "";
-			   
+		   { 			   
 			   try
-			   {			   
-				   if(comboBox.getValue().equals("English - German"))
-				   {
-					   direction = "en-de";
-				   }
-				   else if (comboBox.getValue().equals("German - English"))
-				   {
-					   direction = "de-en";
-				   }
-				   System.out.println(fileName);
-				   translator.translateFile(fileName.getText(), trFileName.getText(), direction);
-				   
+			   {			   				   
+				   translator.translateFile(fileName.getText(), trFileName.getText(), comboBox.getValue());
 				   message.setText("File has been translated");
-				   
 				   
 			   }
 			   catch(FileNotFoundException | DirectionException | NullPointerException e)
@@ -370,13 +346,13 @@ public class GUI extends Application
 		label2.setFont(Font.font(20));
 		TextField translatedText = new TextField();
 		
-		Label langOption = new Label("Please choose a direction");
+		Label langOption = new Label("Please choose a dictionary");
 		langOption.setFont(Font.font(20));
-		
 		ComboBox<String> comboBox = new ComboBox<>();
-		comboBox.getItems().addAll("English - German", "German - English");
+		comboBox.getItems().addAll(translator.getLoadedDictionaries());
 		 
-		Button button = new Button("Add");  
+		Button button = new Button("Add");
+		button.setFont(Font.font(15));
 		HBox box = new HBox(10);
 		box.setAlignment(Pos.BOTTOM_RIGHT);
 		box.getChildren().add(button);
@@ -394,7 +370,7 @@ public class GUI extends Application
 		grid.add(langOption, 0, 3);
 		grid.add(comboBox, 1, 3);
 		grid.add(box, 1, 4);
-		grid.add(message, 1, 5);
+		grid.add(message, 0, 4, 2, 1);
 		
 		Group add = new Group(grid);
 		add.getChildren().add(vBox);
@@ -406,19 +382,8 @@ public class GUI extends Application
 		    public void handle(MouseEvent e) 
 		    { 
 				try
-				{
-					String direction = "";
-					
-					if(comboBox.getValue().equals("English - German"))
-					{
-						direction = "en-de";
-					}
-					else if (comboBox.getValue().equals("German - English"))
-					{
-						direction = "de-en";
-					}
-					
-					translator.addToDictionary(toTransl.getText(), translatedText.getText(), direction);
+				{					
+					translator.addToDictionary(toTransl.getText(), translatedText.getText(), comboBox.getValue());
 					
 					message.setText("Added to dictionary");
 				}
@@ -436,7 +401,6 @@ public class GUI extends Application
 	{	
 	    GridPane grid = new GridPane();
 		
-	    grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(50);
 		grid.setVgap(40);
@@ -446,24 +410,33 @@ public class GUI extends Application
 		Text title = new Text("Remove word from dictionary:");
 		title.setFont(Font.font("Tahoma", 40)); 
 	
-		Label textToTransl = new Label("Please enter the word you want to remove:");
-		textToTransl.setFont(Font.font(20));
-		TextField toTransl = new TextField();
+		Label label1 = new Label("Please enter the word:");
+		label1.setFont(Font.font(20));
+		TextField toDelete = new TextField();
+		
+		Label langOption = new Label("Please choose a dictionary");
+		langOption.setFont(Font.font(20));
+		ComboBox<String> comboBox = new ComboBox<>();
+		comboBox.getItems().addAll(translator.getLoadedDictionaries());
 		 
-		Button button = new Button("Submit");  
+		Button button = new Button("Remove");  
+		button.setFont(Font.font(15));
 		HBox box = new HBox(10);
 		box.setAlignment(Pos.BOTTOM_RIGHT);
 		box.getChildren().add(button);
-
-		grid.add(title, 0, 0, 2, 1);
-		grid.add(textToTransl, 0, 1);
-		grid.add(toTransl, 1, 1);
-		grid.add(box, 1, 3); 
-	    
+		
+		//added message
 		Text message = new Text();
 		message.setFill(Color.FIREBRICK);
 		message.setFont(Font.font(20));
-		grid.add(message, 1, 4, 3, 1);
+
+		grid.add(title, 0, 0, 2, 1);
+		grid.add(label1, 0, 1);
+		grid.add(toDelete, 1, 1);
+		grid.add(langOption, 0, 2);
+		grid.add(comboBox, 1, 2);
+		grid.add(box, 1, 3);
+		grid.add(message, 0, 3);
 		 
 	    Group remove = new Group(grid);
 	    remove.getChildren().add(vBox);
@@ -474,16 +447,15 @@ public class GUI extends Application
 		   @Override 
 		   public void handle(MouseEvent e) 
 		   { 
-//			   try
-//			   {			   
-//				   
-//				   
-//				   message.setText("Word removed to dictionary");
-//			   }
-//			   catch(FileNotFoundException | DirectionException | NullPointerException e2)
-//			   {
-//				   message.setText("Please fill out all the fields correctly");
-//			   }
+			   try
+			   {	
+				   translator.removeFromDictionary(toDelete.getText(), comboBox.getValue());
+				   message.setText("Word removed from dictionary");
+			   }
+			   catch(Exception e2)
+			   {
+				   message.setText("Error");
+			   }
 			   
 		   } 
 		 };   
@@ -491,28 +463,30 @@ public class GUI extends Application
 	    
 	}
 	
+	/**
+	 * 
+	 * @param scene
+	 * @param vBox
+	 * @param primaryStage
+	 */
+	
 	public void loadDic(Scene scene, VBox vBox, Stage primaryStage)
 	{
 		GridPane grid = new GridPane();
 		 
-		grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(15);
 		grid.setVgap(40);
-		grid.setPadding(new Insets(150, 100, 300, 300));
+		grid.setPadding(new Insets(150, 100, 400, 400));
 		grid.setMinSize(200, 200); 
 		    
-		Text title = new Text("Load a Dictionary from File:");
-		title.setFont(Font.font("Tahoma", 40)); 
-	
-		Label label = new Label("Please enter the details of the file:");
-		label.setFont(Font.font(20));
-		TextField fileName = new TextField();
+		Text title = new Text("Load a Dictionary:");
+		title.setFont(Font.font("Tahoma", 40)); 	
 		
-		Button button = new Button("Search");  
-		HBox box = new HBox(10);
-		box.setAlignment(Pos.BOTTOM_RIGHT);
-		box.getChildren().add(button);
+		Label langOption = new Label("Please choose a dictionary: ");
+		langOption.setFont(Font.font(20));
+		ComboBox<String> comboBox = new ComboBox<>();
+		comboBox.getItems().addAll(translator.getSupportedDirections());
 		 
 		Button button2 = new Button("Load");
 		button2.setFont(Font.font(15));
@@ -521,83 +495,68 @@ public class GUI extends Application
 		box2.getChildren().add(button2);
 
 		grid.add(title, 0, 0, 2, 1);
-		grid.add(label, 0, 1);
-		grid.add(fileName, 1, 1);
-		grid.add(box, 2, 1); 
-		grid.add(box2, 2, 3); 
+		grid.add(langOption, 0, 1);
+		grid.add(comboBox, 1, 1); 
+		grid.add(box2, 1, 3); 
 	
 		Text message = new Text();
 		message.setFill(Color.FIREBRICK);
 		message.setFont(Font.font(20));
-		grid.add(message, 1, 4, 3, 1);
+		grid.add(message, 0, 3);
 		 
 	    Group loadDic = new Group(grid);
 	    loadDic.getChildren().add(vBox);
 	    scene.setRoot(loadDic); 
-	    
-	    FileChooser fileChooser = new FileChooser(); 
-		 
-		EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() 
-		{
-			public void handle(ActionEvent e) 
-			{ 
-				// get the file selected 
-			    File file = fileChooser.showOpenDialog(primaryStage); 
-			  
-			    if (file != null) 
-			    {
-			    	 fileName.setText(file.getName());
-			    }     
-			} 
-		}; 
-		button.setOnAction(event);
 	    
 	    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		 { 
 		   @Override 
 		   public void handle(MouseEvent e) 
 		   { 
-//			   try
-//			   {			   
-//				   //whats with direction???
-//				   translator.loadDictionaryFromFile(fileName.getText(), direction);
-//				   
-//				   message.setText("Dictionary loaded from file");
-//			   }
-//			   catch(FileNotFoundException | NullPointerException e3)
-//			   {
-//				   message.setText("Please fill out all the fields correctly");
-//			   }  
+			   try
+			   {			   
+				   translator.loadDictionary(comboBox.getValue());
+				   
+				   message.setText("Dictionary loaded from file");
+			   }
+			   catch(Exception e3)
+			   {
+				   message.setText("No dictionary chosen");
+			   }  
 		   } 
 		 };   
-		 button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		 button2.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	    
 	    
 	}
+	
+	/**
+	 * 
+	 * @param scene
+	 * @param vBox
+	 * @param primaryStage
+	 */
 	
 	public void displayDic(Scene scene, VBox vBox, Stage primaryStage)
 	{
 		GridPane grid = new GridPane();
 		 
-		grid.setGridLinesVisible(true);
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(15);
-		grid.setVgap(40);
-		grid.setPadding(new Insets(150, 100, 300, 300));
+		grid.setVgap(20);
+		grid.setPadding(new Insets(100, 100, 350, 350));
 		grid.setMinSize(200, 200); 
 		    
 		Text title = new Text("Display the Dictionary:");
 		title.setFont(Font.font("Tahoma", 40)); 
 
-		Label label = new Label("Please enter the details of the dictionary:");
+		Label label = new Label("Please choose a dictionary:");
 		label.setFont(Font.font(20));
-		TextField fileName = new TextField();
+		ComboBox<String> comboBox = new ComboBox<>();
+		comboBox.getItems().addAll(translator.getLoadedDictionaries());
 		
-		Button button = new Button("Search");  
-		HBox box = new HBox(10);
-		box.setAlignment(Pos.BOTTOM_RIGHT);
-		box.getChildren().add(button);
-		 
+		TextArea dictionary = new TextArea();
+		
 		Button button2 = new Button("Display");
 		button2.setFont(Font.font(15));
 		HBox box2 = new HBox(10);
@@ -606,36 +565,19 @@ public class GUI extends Application
 
 		grid.add(title, 0, 0, 2, 1);
 		grid.add(label, 0, 1);
-		grid.add(fileName, 1, 1);
-		grid.add(box, 2, 1); 
-		grid.add(box2, 2, 3); 
+		grid.add(comboBox, 1, 1);
+		grid.add(dictionary, 0, 3, 2, 1);
+		grid.add(box2, 1, 4); 
 	
 		//the text in the dictionary
 		Text message = new Text();
 		message.setFill(Color.FIREBRICK);
 		message.setFont(Font.font(20));
-		grid.add(message, 1, 3, 3, 1);
+		grid.add(message, 0, 4);
 		 
 	    Group displayDic = new Group(grid);
 	    displayDic.getChildren().add(vBox);
 	    scene.setRoot(displayDic); 
-	    
-	    FileChooser fileChooser = new FileChooser(); 
-		 
-		EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() 
-		{
-			public void handle(ActionEvent e) 
-			{ 
-				// get the file selected 
-			    File file = fileChooser.showOpenDialog(primaryStage); 
-			  
-			    if (file != null) 
-			    {
-			    	 fileName.setText(file.getName()); 
-			    }     
-			} 
-		}; 
-		button.setOnAction(event); 
 	    
 	    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() 
 		 { 
@@ -643,20 +585,16 @@ public class GUI extends Application
 		   public void handle(MouseEvent e) 
 		   { 
 			   try
-			   {	
-				   //searching by direction!!!!
-				   
-				   translator.displayDictionary(fileName.getText());
-				   
-				   message.setText("Dictionary loaded from file");
+			   {					   
+				   dictionary.setText(translator.displayDictionary(comboBox.getValue()));
 			   }
 			   catch(NullPointerException e4)
 			   {
-				   message.setText("Please fill out all the fields correctly");
+				   message.setText("No dictionary chosen");
 			   }
 		   } 
 		 };   
-		 button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+		 button2.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 	    
 	}
 	
@@ -702,11 +640,13 @@ public class GUI extends Application
 			   {			   
 				   translator.saveDictionaryToFile();
 				   
-				   message.setText("Dictionary saved to file");
+				   message.setText("Dictionaries saved to file");
 			   }
 			   catch(Exception e5)
 			   {
 				  
+				   //
+				   
 			   }
 		   } 
 		 };   

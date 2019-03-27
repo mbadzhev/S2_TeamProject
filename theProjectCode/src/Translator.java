@@ -1,9 +1,14 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Translator {
 	private Dictionary dictionary;
@@ -29,7 +34,7 @@ public class Translator {
 		long startTime = System.nanoTime();
 		int wordCount = 0;
 		// check if the direction is loaded in the dictionary
-		if (!dictionary.dictionaryLoaded(direction)) {
+		if (!dictionary.getLoadedDictionaries().contains(direction)) {
 			throw new DirectionException("the direction " + direction + " does not exist");
 		}
 		BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -37,12 +42,14 @@ public class Translator {
 		try {
 			while (reader.ready()) {
 				String line = reader.readLine();
+				if (line.equals("")) {
+					continue;
+				}
 				String[] words=line.split(" ");
 				for (int i=0;i<words.length;i++) {
-					writer.print(dictionary.translate(words[i], "de-en")+" ");
+					writer.print(dictionary.translate(words[i], direction)+" ");
 					wordCount++;
 				}
-				writer.println();
 				writer.println();
 			}
 			writer.close();
@@ -57,7 +64,7 @@ public class Translator {
 
 
 	/**
-	 * loads a dictionary from a file
+	 * loads a dictionary from a file. If the file doesn't exists, a new file will be created.
 	 * 
 	 * @param direction the direction of the dictionary in the file
 	 * @throws IOException
@@ -144,5 +151,19 @@ public class Translator {
 	 */
 	public void addToDictionary(String key, String value, String direction) {
 		dictionary.addToDictionary(key,value,direction);
+	}
+	/**
+	 * Returns all loaded dictionaries
+	 * @return
+	 */
+	public ArrayList<String> getLoadedDictionaries() {
+		return dictionary.getLoadedDictionaries();
+	}
+	/**
+	 * Returns all supported dictionaries (even if not currently loaded)
+	 * @return
+	 */
+	public ArrayList<String> getSupportedDirections() {
+		return dictionary.getSupportedDirections();
 	}
 }

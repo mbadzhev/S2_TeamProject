@@ -25,6 +25,7 @@ public class Dictionary {
 	private HashMap<String, HashMap<String, String>> partsMap;
 	private HashMap<String, String> dictionaryPaths;
 	private ArrayList<String> directions;
+	private ArrayList<String> supportedDirections;
 	private boolean automaticAdding;
 
 	/**
@@ -32,6 +33,13 @@ public class Dictionary {
 	 * (so it does not have to open every single time)
 	 */
 	public Dictionary() {
+		supportedDirections=new ArrayList<String>();
+		supportedDirections.add("en-de");
+		supportedDirections.add("de-en");
+		supportedDirections.add("fr-en");
+		supportedDirections.add("en-fr");
+		supportedDirections.add("en-es");
+		supportedDirections.add("es-en");
 		automaticAdding = true;
 		writers = new HashMap<String, PrintWriter>();
 		partsMap = new HashMap<String, HashMap<String, String>>();
@@ -54,35 +62,36 @@ public class Dictionary {
 		partsMap.put(direction, new HashMap<String, String>());
 		directions.add(direction);
 		dictionaryPaths.put(direction, direction + ".txt");
-		try {
-			File file = new File(direction + ".txt");
-			file.createNewFile();
-		} catch (Exception e) {
-			// Already exists, no worries
+		File file = new File(direction + ".txt");
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+			}
 		}
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File(direction + ".txt")));
+			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line;
 			while (reader.ready()) {
 				line = reader.readLine();
 				String[] mappings = line.split(" ");
-				addToDictionary(mappings[0], mappings[1], direction);
+				partsMap.get(direction).put(mappings[0], mappings[1]);
 			}
 			reader.close();
 		} catch (Exception e) {
 		}
 		try {
-			writers.put(direction,
-					new PrintWriter(new FileOutputStream(new File(dictionaryPaths.get(direction)), true)));
+			writers.put(direction,new PrintWriter(new FileOutputStream(dictionaryPaths.get(direction), true)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Given a filename, this function parses a dictionary from that file to HashMAp
-	 * of direction If it already exists or it can't load it for whatever reason it
-	 * throws Exception
+	 * Given a filename, this function parses a dictionary from that file to HashMap
+	 * of direction.
+	 *  If it already exists or it can't load it for whatever reason it
+	 * throws an Exception
 	 *
 	 * @param filename the file where the dictionary is store in.
 	 * @param map      the HashMap to store the dictionary to.
@@ -94,10 +103,8 @@ public class Dictionary {
 			initialiseDirection(direction);
 			initialiseDirection(getInverseDirection(direction));
 		} else {
-			throw new Exception();
+			throw new Exception("already loaded");
 		}
-		// TODO check if the format of the dictionary is right
-		// TODO support UTF-8 / Umlaut
 	}
 
 	/**
@@ -111,7 +118,6 @@ public class Dictionary {
 				PrintWriter rewriter = new PrintWriter(new FileOutputStream(new File(dictionaryPaths.get(direction)), false));
 				for (Map.Entry<String, String> keyValuePair : partsMap.get(direction).entrySet()) {
 					rewriter.println(keyValuePair.getKey() + " " + keyValuePair.getValue());
-					System.out.println(keyValuePair.getKey());
 				}
 				rewriter.flush();
 			} catch (FileNotFoundException e) {
@@ -126,45 +132,25 @@ public class Dictionary {
 	 * @param word
 	 * @param toGerman toGerman or false toEnglish
 	 * @return translation
-	 * @throws DirectionException throws exception if direction is unknown
 	 */
-	public String translate(String word, String direction) throws DirectionException {
-
-//		if (partsMap.get(direction) == null) {
-//			throw new DirectionException("the direction " + direction + " does not exist");
-//		}
-		if (word.equals("")) {
-			return word;
-		}
-		//return partsMap.get(direction).get(word);
-		if (partsMap.get(direction).containsKey(word)) {
-			return partsMap.get(direction).get(word);
-		}
-		if (automaticAdding) {
-			try {
-				URL url = new URL(HOST + "key=" + KEY + "&text=" + word + "&lang=" + direction);
-				InputStream is = url.openStream();
-				Scanner s = new Scanner(is);
-				String translation = parseJSONTranslation(s.nextLine());
-				if (!word.equals(translation)) {
+	public String translate(String word, String direction) {
+		String ret= partsMap.get(direction).get(word);
+		if (ret==null) {
+			if (automaticAdding) {
+				try {
+					URL url = new URL(HOST + "key=" + KEY + "&text=" + word + "&lang=" + direction);
+					InputStream is = url.openStream();
+					Scanner s = new Scanner(is);
+					String translation = parseJSONTranslation(s.nextLine());
 					saveWord(word, translation, direction);
+					return translation;
+				} catch (Exception e) {
 				}
-				return translation;
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+			System.out.println("happening");
+			ret="";
 		}
-		return "";
-	}
-
-	/**
-	 * checks if a dictionary is loaded.
-	 * 
-	 * @param direction the direction of the dictionary
-	 * @return true if the dictionary is loaded.
-	 */
-	public boolean dictionaryLoaded(String direction) {
-		return partsMap.containsKey(direction);
+		return ret;
 	}
 
 	/**
@@ -282,6 +268,9 @@ public class Dictionary {
 	 * @return a dictionary as a String
 	 */
 	public String displayDictionary(String direction) {
+		if (!partsMap.containsKey(direction)) {
+			return "";
+		}
 		String output = "";
 		for (Map.Entry<String, String> keyValuePair : partsMap.get(direction).entrySet()) {
 			output += keyValuePair.getKey() + " <> " + keyValuePair.getValue() + "\r\n";
@@ -295,5 +284,19 @@ public class Dictionary {
 
 	public void toggleAutomaticAdding() {
 		automaticAdding = !automaticAdding;
+	}
+	/**
+	 * Returns all loaded dictionaries
+	 * @return
+	 */
+	public ArrayList<String> getLoadedDictionaries() {
+		return new ArrayList<String>(directions);
+	}
+	/**
+	 * Returns all supported dictionaries (even if not currently loaded)
+	 * @return
+	 */
+	public ArrayList<String> getSupportedDirections() {
+		return new ArrayList<String>(supportedDirections);
 	}
 }
