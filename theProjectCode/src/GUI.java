@@ -334,7 +334,6 @@ public class GUI extends Application
 				   {
 					   direction = "de-en";
 				   }
-				   System.out.println(fileName);
 				   translator.translateFile(fileName.getText(), trFileName.getText(), direction);
 				   
 				   message.setText("File has been translated");

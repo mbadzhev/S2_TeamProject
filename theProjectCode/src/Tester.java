@@ -132,6 +132,7 @@ public class Tester {
 			System.out.println(e.getMessage());
 		}
 		System.out.println("END TEST TRANSLATE WORDS >>>>>");
+
 	}
 
 	/**
@@ -170,6 +171,7 @@ public class Tester {
 			System.out.println(
 					"words per second: " + translator.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en")
 							+ ", translation done");
+
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());
 		}
