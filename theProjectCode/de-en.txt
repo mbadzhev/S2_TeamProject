@@ -2568,7 +2568,7 @@ zerstoï¿½en destroyï¿½en
 Globus globe
 rundumher around
 versteckt hidden
-Abenteuer.\" adventure.â€?
+Abenteuer.\" adventure.ï¿½?
 Gesï¿½uertes Gesï¿½uertes
 sammle, collect,
 vollendeten completed
@@ -3008,7 +3008,7 @@ eingehst, COMEST
 zogen. moved.
 zogen, moved,
 begegnete. met.
-(\"trad\") (â€œtradâ€?)
+(\"trad\") (â€œtradï¿½?)
 grï¿½ï¿½er. grï¿½heï¿½.
 grï¿½ï¿½er, grï¿½heï¿½,
 sprachen languages
@@ -4362,7 +4362,7 @@ Ziegen. Goat.
 zugerichtet the
 Kleinode Gems
 Ziegeln Bricks
-\"trad\" â€œtradâ€?
+\"trad\" â€œtradï¿½?
 herniedergelassen down
 Ziegen, Goats,
 Ihm Him
@@ -4494,7 +4494,7 @@ treffen. meet.
 glï¿½cklicher glï¿½for
 licht light
 Bisher So
-Bergsteigen,\" mountaineering,â€?
+Bergsteigen,\" mountaineering,ï¿½?
 Bachs, Bach,
 beredt eloquent
 Grase. Grass.
@@ -8496,7 +8496,7 @@ Freijahr Free
 derselbe the
 Seku Second.
 Helm Helmet
-Everest,\" Everest,â€?
+Everest,\" Everest,ï¿½?
 versengt. scorched.
 Hemden Shirts
 sï¿½ndigt, sï¿½completed,
@@ -11495,7 +11495,7 @@ sich sich
 RÃ¤ngen echelons
 denen, which,
 Groï¿½es. Groï¿½it.
-Systeme.\" systems.â€?
+Systeme.\" systems.ï¿½?
 Kommt, Comes,
 preisen, prices,
 preisen. prices.
@@ -11765,7 +11765,7 @@ gebar gave
 abwendig, such
 bunte colorful
 Ziegenhaar, Goats
-\"top-down\" â€œtop-downâ€?
+\"top-down\" â€œtop-downï¿½?
 niedergekniet knelt
 wenig, little,
 drï¿½ckt drï¿½ckt
@@ -11915,7 +11915,7 @@ Blasen Bubbles
 Zedernholz Cedar
 gebï¿½ren, bornï¿½ren,
 eiterweiï¿½ eiterweiï¿½
-Stein.\" stone.â€?
+Stein.\" stone.ï¿½?
 gebï¿½ren. bornï¿½ren.
 Allerhï¿½chste Allerhï¿½most
 segnest bless
@@ -13386,7 +13386,7 @@ Tuches Cloth
 (zwanzig (twenty
 Midians, Of
 sollen to
-terrain.\" terrain.â€?
+terrain.\" terrain.ï¿½?
 Gute, Good,
 ï¿½belwollen. ï¿½belwollen.
 ewiglich forever
@@ -15187,4 +15187,14 @@ il il
 solei solei
 sonne sun
 scheint seems
->>>>>>> master
+mag>like
+Schokolade>Chocolate
+mit>with
+ganz>all
+viel>a lot of
+Brei>Porridge
+mag>likes
+Schokolade>chocolate
+ein>a
+viel>lot
+der>of
