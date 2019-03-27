@@ -159,7 +159,7 @@ public class GUI extends Application
 			    public void handle(MouseEvent e) 
 			    {					   
 					try
-					{								
+					{					
 						translatedText.setText(translator.translate(toTransl.getText(), comboBox.getValue()));
 						
 						message.setText("");
@@ -176,8 +176,8 @@ public class GUI extends Application
 		    {
 		    	//update comboBox with newly loaded dictionaries
 		    	ComboBox<String> comboBox2 = new ComboBox<>();
-		    	comboBox2.getItems().addAll(translator.getLoadedDictionaries());
-		    	grid.add(comboBox2, 0, 4);
+		    	comboBox.getItems().addAll(translator.getLoadedDictionaries());//
+		    	//grid.add(comboBox2, 0, 4);
 		    	
 		    	if(!transl.getChildren().contains(vBox)) 
 		    	{

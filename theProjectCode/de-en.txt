@@ -15188,3 +15188,6 @@ solei solei
 sonne sun
 scheint seems
 >>>>>>> master
+Hallo>hello
+übersetzen>translate
+diese>this
