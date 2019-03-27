@@ -125,9 +125,6 @@ public class GUI extends Application
 		    Label label = new Label("Please enter the direction:");
 		    label.setFont(Font.font(20));
 		    ComboBox<String> comboBox = new ComboBox<>();
-		    
-		    
-		    //Not working
 			comboBox.getItems().addAll(translator.getLoadedDictionaries());
 		  
 		    Button button1 = new Button("Translate");
@@ -177,11 +174,17 @@ public class GUI extends Application
 		  
 		    menuItem0.setOnAction(e ->
 		    {
+		    	//update comboBox with newly loaded dictionaries
+		    	ComboBox<String> comboBox2 = new ComboBox<>();
+		    	comboBox2.getItems().addAll(translator.getLoadedDictionaries());
+		    	grid.add(comboBox2, 0, 4);
+		    	
 		    	if(!transl.getChildren().contains(vBox)) 
 		    	{
 		    		transl.getChildren().add(vBox);
 			    	scene.setRoot(transl);
 		    	}
+		    	System.out.println(translator.getLoadedDictionaries());
 		    	
 		    });
 		    menuItem.setOnAction(e -> 
@@ -316,10 +319,12 @@ public class GUI extends Application
 		   public void handle(MouseEvent event) 
 		   { 			   
 			   try
-			   {			   				   
-				   translator.translateFile(fileName.getText(), trFileName.getText(), comboBox.getValue());
+			   {	
+				   double time = 0.0;
 				   
-				   message.setText("File has been translated");
+				   time = translator.translateFile(fileName.getText(), trFileName.getText(), comboBox.getValue());
+				   
+				   message.setText("Time for translation in words/second: " + time);
 			   }
 			   catch(FileNotFoundException | DirectionException | NullPointerException e)
 			   {
