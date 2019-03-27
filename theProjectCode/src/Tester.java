@@ -1,20 +1,23 @@
-import java.awt.Desktop;
-import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
 
+/**
+ * a class to run tests
+ * 
+ * @author group 1
+ *
+ */
 public class Tester {
 	Translator translator;
 
 	public static void main(String[] args) {
-		
+
 		Tester tester = new Tester();
 		tester.runTestMenu();
 
 	}
 
 	public Tester() {
-		
+
 		translator = new Translator();
 	}
 
@@ -134,14 +137,14 @@ public class Tester {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		System.out.println("translate an umlaut: ");
 		try {
 			System.out.println(translator.translate("Mütter", "de-en"));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		System.out.println("translate an umlaut: ");
 		try {
 			System.out.println(translator.translate("mothers", "en-de"));
@@ -196,7 +199,7 @@ public class Tester {
 		System.out.println("Translate a file de-en (Rotkappchen): ");
 		try {
 			System.out.println(
-					"words per second: " + translator.translateFile("Rotkäppchen.txt","Rotkäppchen_en.txt", "de-en")
+					"words per second: " + translator.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en")
 							+ ", translation done");
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());
@@ -320,14 +323,15 @@ public class Tester {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		translator.removeFromDictionary("my", "en-de");
 		translator.removeFromDictionary("meinem", "en-de");
 		translator.removeFromDictionary("mother", "en-de");
 		translator.removeFromDictionary("likes", "en-de");
 		translator.removeFromDictionary("cooking", "en-de");
 
-		System.out.println("Set automaticAdding to false,  remove words that are going to be removed and translate and translate ");
+		System.out.println(
+				"Set automaticAdding to false,  remove words that are going to be removed and translate and translate ");
 		// set automticAdding to false
 		if (translator.getAutomaticAdding()) {
 			translator.toggleAutomaticAdding();

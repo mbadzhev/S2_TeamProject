@@ -18,6 +18,14 @@ import java.util.Scanner;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+/**
+ * All loaded Dictionaries are stored in this class. This class provides methods
+ * for manipulating dictionaries, such as loading and saving them, translating
+ * words etc.
+ * 
+ * @author group 1
+ *
+ */
 public class Dictionary {
 	private final static String HOST = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
 	private final static String KEY = "trnsl.1.1.20190305T204312Z.dfa16cd3173c9caf.d933df65b77daf7957e97b8e2e6571320a9823a3";
@@ -29,8 +37,11 @@ public class Dictionary {
 	private boolean automaticAdding;
 
 	/**
-	 * Reads dictionary files and loads to hashmaps Opens writers to write new words
-	 * (so it does not have to open every single time)
+	 * constructor for a new Dictionary object. Loads an en-de and de-en dictionary
+	 * by default and adds supported directions to the dictionary
+	 * 
+	 * Moreover it reads dictionary files and loads to hashmaps. Opens writers for
+	 * every word (efficienty purposes)
 	 */
 	public Dictionary() {
 		supportedDirections = new ArrayList<String>();
@@ -54,9 +65,13 @@ public class Dictionary {
 	}
 
 	/**
-	 * Initialises hashmaps for a direction
+	 * Initialises a direction. This includes registering the direction in the
+	 * direction index, creating a HashMap for translation, adding the path to the
+	 * file where the dictionary is stored, creating a new file for that direction,
+	 * if necessary. Moreover, all entries in the text file will be loaded into a
+	 * hashmap. A writer is initialized as well
 	 * 
-	 * @param direction
+	 * @param direction the directing of the dictionary
 	 */
 	public void initialiseDirection(String direction) {
 		partsMap.put(direction, new HashMap<String, String>());
@@ -70,7 +85,6 @@ public class Dictionary {
 			}
 		}
 		try {
-//			BufferedReader reader = new BufferedReader(new FileReader(file));
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "ISO-8859-1"));
 			String line;
 			while (reader.ready()) {
@@ -89,13 +103,12 @@ public class Dictionary {
 	}
 
 	/**
-	 * Given a filename, this function parses a dictionary from that file to HashMap
+	 * Given a direction, this function parses a dictionary from a file to HashMap
 	 * of direction. If it already exists or it can't load it for whatever reason it
 	 * throws an Exception
 	 *
-	 * @param filename the file where the dictionary is store in.
-	 * @param map      the HashMap to store the dictionary to.
-	 * @throws IOException 
+	 * @param direction the direction of the dictionary to load
+	 * @throws IOException throws an exception if the dictionary is already loaded
 	 */
 	public void loadDictionary(String direction) throws Exception {
 		// Will throw exception if FileReader can't load it or already loaded
@@ -103,13 +116,13 @@ public class Dictionary {
 			initialiseDirection(direction);
 			initialiseDirection(getInverseDirection(direction));
 		} else {
-			throw new Exception("already loaded");
+			throw new Exception("dictionary already loaded");
 		}
 	}
 
 	/**
-	 * this function saves all dictionaries using the hashmaps. replaces existing
-	 * files
+	 * this function saves all dictionaries to their corresponding files and
+	 * replaces existing files
 	 * 
 	 */
 	public void saveDictionary() {
@@ -130,9 +143,9 @@ public class Dictionary {
 	/**
 	 * translates a single word
 	 * 
-	 * @param word
-	 * @param toGerman toGerman or false toEnglish
-	 * @return translation
+	 * @param word      the word to be translated
+	 * @param direction the direction of translation
+	 * @return translation of that word
 	 */
 	public String translate(String word, String direction) {
 		String ret = partsMap.get(direction).get(word);
@@ -158,10 +171,11 @@ public class Dictionary {
 
 	/**
 	 * Saves words not already in the dictionary. The words will be added to the
+	 * dictionary file.
 	 * 
-	 * @param word
-	 * @param translation
-	 * @param toGerman
+	 * @param word        the word to save
+	 * @param translation the translation of that word
+	 * @param direcion    the direction of translation
 	 */
 	private void saveWord(String word, String translation, String direction) {
 		try {
@@ -182,8 +196,8 @@ public class Dictionary {
 	 * or "fr-de". If the direction is "en-de", the inverse will be "de-en". Doesn't
 	 * check for direction validity
 	 * 
-	 * @param direction
-	 * @return
+	 * @param direction the direction
+	 * @return the inverse direction of the direction
 	 */
 	private String getInverseDirection(String direction) {
 		String[] languages = direction.split("-");
@@ -193,7 +207,7 @@ public class Dictionary {
 	/**
 	 * Parses json translation given by API
 	 * 
-	 * @param json
+	 * @param json json input
 	 * @return value of translation
 	 */
 	private String parseJSONTranslation(String json) {
@@ -208,8 +222,8 @@ public class Dictionary {
 	/**
 	 * parses json language detection given by API
 	 * 
-	 * @param json
-	 * @return language en or de
+	 * @param json json input
+	 * @return language
 	 */
 	private String parseJSONDetect(String json) {
 		int langIndex = json.lastIndexOf("lang") + 8;
@@ -220,7 +234,8 @@ public class Dictionary {
 	/**
 	 * removes key-value from dictionary
 	 * 
-	 * @param key
+	 * @param key       key to be removed
+	 * @param direction the dictionary the key should be removed from
 	 */
 	public void removeFromDictionary(String key, String direction) {
 		partsMap.get(direction).remove(key);
@@ -230,9 +245,9 @@ public class Dictionary {
 	/**
 	 * adds key-value to dictionary
 	 * 
-	 * @param key
-	 * @param value
-	 * @param toEnglishToGerman
+	 * @param key       the key taht should be added
+	 * @param value     the value that corresponds to the key
+	 * @param direction the direction of that translation
 	 */
 	public void addToDictionary(String key, String value, String direction) {
 		partsMap.get(direction).put(key, value);
@@ -242,8 +257,8 @@ public class Dictionary {
 	/**
 	 * detects language of given word
 	 * 
-	 * @param word
-	 * @return english or german or not found or both
+	 * @param word the word to detect the language from
+	 * @return the possible language of the given word
 	 */
 	public String detectLanguage(String word) {
 		String ret = "not found";
@@ -281,10 +296,18 @@ public class Dictionary {
 		return output;
 	}
 
+	/**
+	 * get the status of the field automaticAdding.
+	 * 
+	 * @return the status of the field automaticAdding.
+	 */
 	public boolean getAutomaticAdding() {
 		return automaticAdding;
 	}
 
+	/**
+	 * toggles the state of automaticAdding
+	 */
 	public void toggleAutomaticAdding() {
 		automaticAdding = !automaticAdding;
 	}
@@ -292,7 +315,7 @@ public class Dictionary {
 	/**
 	 * Returns all loaded dictionaries
 	 * 
-	 * @return
+	 * @return all loaded dictionaries as an ArrayList of generic type String
 	 */
 	public ArrayList<String> getLoadedDictionaries() {
 		return new ArrayList<String>(directions);
@@ -301,7 +324,7 @@ public class Dictionary {
 	/**
 	 * Returns all supported dictionaries (even if not currently loaded)
 	 * 
-	 * @return
+	 * @return all supported dictionaries as an ArrayList String
 	 */
 	public ArrayList<String> getSupportedDirections() {
 		return new ArrayList<String>(supportedDirections);
