@@ -127,9 +127,6 @@ public class GUI extends Application
 		    ComboBox<String> comboBox = new ComboBox<>();
 		    
 		    
-		    
-		    
-		    
 		    //Not working
 			comboBox.getItems().addAll(translator.getLoadedDictionaries());
 		  
@@ -151,7 +148,7 @@ public class GUI extends Application
 		    Text message = new Text();
 			message.setFill(Color.FIREBRICK);
 			message.setFont(Font.font(20));
-			grid.add(message, 1, 3);
+			grid.add(message, 0, 5);
 		
 		    Group transl = new Group(grid);
 		    Scene scene = new Scene(transl, 1200, 600);
@@ -165,6 +162,8 @@ public class GUI extends Application
 					try
 					{								
 						translatedText.setText(translator.translate(toTransl.getText(), comboBox.getValue()));
+						
+						message.setText("");
 					}
 					catch(Exception e0)
 					{
@@ -202,12 +201,12 @@ public class GUI extends Application
     
 		    menuItem3.setOnAction(e -> 
 		    {
-		    	loadDic(scene, vBox, primaryStage);
+		    	loadDic(scene, vBox);
 		    });
 		    
 		    menuItem4.setOnAction(e -> 
 		    {
-		    	displayDic(scene, vBox, primaryStage);
+		    	displayDic(scene, vBox);
 		    });
 		    
 		    menuItem5.setOnAction(e -> 
@@ -319,8 +318,8 @@ public class GUI extends Application
 			   try
 			   {			   				   
 				   translator.translateFile(fileName.getText(), trFileName.getText(), comboBox.getValue());
-				   message.setText("File has been translated");
 				   
+				   message.setText("File has been translated");
 			   }
 			   catch(FileNotFoundException | DirectionException | NullPointerException e)
 			   {
@@ -387,14 +386,21 @@ public class GUI extends Application
 		    public void handle(MouseEvent e) 
 		    { 
 				try
-				{					
-					translator.addToDictionary(toTransl.getText(), translatedText.getText(), comboBox.getValue());
-					
-					message.setText("Added to dictionary");
+				{		
+					if(toTransl.getText().equals("") || translatedText.getText().equals(""))
+					{
+						message.setText("Please fill out all fields");
+					}
+					else
+					{
+						translator.addToDictionary(toTransl.getText(), translatedText.getText(), comboBox.getValue());
+						
+						message.setText("Added to dictionary");
+					}
 				}
 				catch(Exception e1)
 				{
-					message.setText("Please fill out all the fields correctly");
+					message.setText("Please choose a dictionary");
 				}
 		    } 
 		};   
@@ -454,12 +460,20 @@ public class GUI extends Application
 		   { 
 			   try
 			   {	
-				   translator.removeFromDictionary(toDelete.getText(), comboBox.getValue());
-				   message.setText("Word removed from dictionary");
+				   if(toDelete.getText().equals(""))
+				   {
+					   message.setText("Please enter a word");
+				   }
+				   else
+				   {
+					   translator.removeFromDictionary(toDelete.getText(), comboBox.getValue());
+					   
+					   message.setText("Word removed from dictionary");
+				   } 
 			   }
 			   catch(Exception e2)
 			   {
-				   message.setText("Error");
+				   message.setText("No dictionary chosen");
 			   }
 			   
 		   } 
@@ -475,7 +489,7 @@ public class GUI extends Application
 	 * @param primaryStage
 	 */
 	
-	public void loadDic(Scene scene, VBox vBox, Stage primaryStage)
+	public void loadDic(Scene scene, VBox vBox)
 	{
 		GridPane grid = new GridPane();
 		 
@@ -526,7 +540,14 @@ public class GUI extends Application
 			   }
 			   catch(Exception e3)
 			   {
-				   message.setText("No dictionary chosen");
+				   if(e3.getMessage() != null && e3.getMessage().equals("already loaded"))
+				   {
+					   message.setText("Dictionary already loaded");
+				   }
+				   else
+				   {
+					   message.setText("No dictionary chosen");
+				   }
 			   }  
 		   } 
 		 };   
@@ -542,7 +563,7 @@ public class GUI extends Application
 	 * @param primaryStage
 	 */
 	
-	public void displayDic(Scene scene, VBox vBox, Stage primaryStage)
+	public void displayDic(Scene scene, VBox vBox)
 	{
 		GridPane grid = new GridPane();
 		 
@@ -592,6 +613,8 @@ public class GUI extends Application
 			   try
 			   {					   
 				   dictionary.setText(translator.displayDictionary(comboBox.getValue()));
+				   
+				   message.setText("");
 			   }
 			   catch(NullPointerException e4)
 			   {

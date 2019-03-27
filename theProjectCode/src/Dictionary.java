@@ -103,7 +103,7 @@ public class Dictionary {
 			initialiseDirection(direction);
 			initialiseDirection(getInverseDirection(direction));
 		} else {
-			throw new Exception();
+			throw new Exception("already loaded");
 		}
 	}
 
