@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Translator {
 	private Dictionary dictionary;
@@ -40,7 +41,7 @@ public class Translator {
 				String line = reader.readLine();
 				String[] words=line.split(" ");
 				for (int i=0;i<words.length;i++) {
-					writer.print(dictionary.translate(words[i], "de-en")+" ");
+					writer.print(dictionary.translate(words[i], direction)+" ");
 					wordCount++;
 				}
 				writer.println();
