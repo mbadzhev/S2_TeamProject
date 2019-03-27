@@ -51,7 +51,9 @@ public class GUI extends Application
 	private Translator translator;
 	
 	/**
-	 * main method
+	 * the main method
+	 * 
+	 * @param args the parameter for the main method
 	 */
 	
 	public static void main(String[] args) 
@@ -87,8 +89,8 @@ public class GUI extends Application
 			//Add word menu option
 			Menu dictionary = new Menu("Dictionary");
 			menuBar.getMenus().add(dictionary);
-			MenuItem menuItem1 = new MenuItem("Add word from dictionary");
-			MenuItem menuItem2 = new MenuItem("Remove word from dictionary");
+			MenuItem menuItem1 = new MenuItem("Add word to Dictionary");
+			MenuItem menuItem2 = new MenuItem("Remove word from Dictionary");
 			MenuItem menuItem3 = new MenuItem("Load Dictionary");
 			MenuItem menuItem4 = new MenuItem("Display Dictionary");
 			MenuItem menuItem5 = new MenuItem("Save Dictionary");
@@ -172,10 +174,26 @@ public class GUI extends Application
 			    public void handle(MouseEvent e) 
 			    {					   
 					try
-					{								
-						translatedText.setText(translator.translate(toTransl.getText(), comboBoxTransl.getValue()));
+					{			
+						message.setText("Translating...");
 						
-						message.setText("");
+						new Thread(new Runnable() {
+
+							@Override
+							public void run() {
+
+								try {
+									translatedText.setText(translator.translate(toTransl.getText(), comboBoxTransl.getValue()));
+									message.setText("Bam. Translated.");
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
+								message.setText("");
+							}
+							
+						}).start();
 					}
 					catch(Exception e0)
 					{
