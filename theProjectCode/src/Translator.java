@@ -57,7 +57,7 @@ public class Translator {
 
 
 	/**
-	 * loads a dictionary from a file
+	 * loads a dictionary from a file.
 	 * 
 	 * @param direction the direction of the dictionary in the file
 	 * @throws IOException
