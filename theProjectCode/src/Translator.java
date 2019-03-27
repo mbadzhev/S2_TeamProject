@@ -58,7 +58,7 @@ public class Translator {
 
 
 	/**
-	 * loads a dictionary from a file
+	 * loads a dictionary from a file. If the file doesn't exists, a new file will be created.
 	 * 
 	 * @param direction the direction of the dictionary in the file
 	 * @throws IOException

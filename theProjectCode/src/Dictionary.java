@@ -88,9 +88,10 @@ public class Dictionary {
 	}
 
 	/**
-	 * Given a filename, this function parses a dictionary from that file to HashMAp
-	 * of direction If it already exists or it can't load it for whatever reason it
-	 * throws Exception
+	 * Given a filename, this function parses a dictionary from that file to HashMap
+	 * of direction.
+	 *  If it already exists or it can't load it for whatever reason it
+	 * throws an Exception
 	 *
 	 * @param filename the file where the dictionary is store in.
 	 * @param map      the HashMap to store the dictionary to.
