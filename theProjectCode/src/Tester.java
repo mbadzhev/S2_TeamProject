@@ -118,14 +118,14 @@ public class Tester {
 			System.out.println(e.getMessage());
 		}
 
-		System.out.println("Translate a word that doesn’t exist in one language: ");
+		System.out.println("Translate a word that doesnâ€™t exist in one language: ");
 		try {
 			System.out.println(translator.translate("seseseseiii", "de-en"));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 
-		System.out.println("Translate a word and a special character (e.g. ;,:”/’): ");
+		System.out.println("Translate a word and a special character (e.g. ;,:â€�/â€™): ");
 		try {
 			System.out.println(translator.translate("say:", "en-de"));
 		} catch (Exception e) {
@@ -179,7 +179,7 @@ public class Tester {
 		System.out.println("Translate a file de-en (Rotkappchen): ");
 		try {
 			System.out.println(
-					"words per second: " + translator.translateFile("Rotkäppchen.txt", "Rotkäppchen_en.txt", "de-en")
+					"words per second: " + translator.translateFile("Rotkäppchen.txt","Rotkäppchen_en.txt", "de-en")
 							+ ", translation done");
 		} catch (IOException | DirectionException e) {
 			System.out.println(e.getMessage());
