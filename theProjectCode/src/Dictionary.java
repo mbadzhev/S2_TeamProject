@@ -47,10 +47,26 @@ public class Dictionary {
 		supportedDirections = new ArrayList<String>();
 		supportedDirections.add("en-de");
 		supportedDirections.add("de-en");
-		supportedDirections.add("fr-en");
 		supportedDirections.add("en-fr");
+		supportedDirections.add("fr-en");
 		supportedDirections.add("en-es");
 		supportedDirections.add("es-en");
+		supportedDirections.add("en-ru");
+		supportedDirections.add("ru-en");
+		supportedDirections.add("en-it");
+		supportedDirections.add("it-en");
+		
+		supportedDirections.add("en-tr");
+		supportedDirections.add("tr-en");
+		supportedDirections.add("en-et");
+		supportedDirections.add("et-en");
+		supportedDirections.add("en-sl");
+		supportedDirections.add("sl-en");
+		supportedDirections.add("en-be");
+		supportedDirections.add("be-en");
+		supportedDirections.add("en-ro");
+		supportedDirections.add("ro-en");
+		
 		automaticAdding = true;
 		writers = new HashMap<String, PrintWriter>();
 		partsMap = new HashMap<String, HashMap<String, String>>();
@@ -163,7 +179,6 @@ public class Dictionary {
 				} catch (Exception e) {
 				}
 			}
-			System.out.println("happening");
 			ret = "";
 		}
 		return ret;
